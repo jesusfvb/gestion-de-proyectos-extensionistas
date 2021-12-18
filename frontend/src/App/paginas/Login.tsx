@@ -16,25 +16,29 @@ import logo from '../img/logo.png'
 import axios from "axios";
 import {FormEvent} from "react";
 
-export default function Login(props: { setSesion: Function<void> }) {
+export default function Login(props: { setSession: Function }) {
     const theme = createTheme()
 
-    const iniciarSesion = (even: FormEvent) => {
+    const iniciarSession = (even: FormEvent) => {
         even.preventDefault()
+        let inputs = even.currentTarget.getElementsByTagName("input")
+        console.log(inputs.namedItem("contrasenna")?.value)
         axios
             .post("/login", {
-                usuario: even.target.usuario.value,
-                contrasenna: even.target.contrasenna.value
+                usuario: inputs.namedItem("usuario")?.value,
+                contrasenna: inputs.namedItem("contrasenna")?.value
             })
             .then(datos => {
-                props.setSesion(datos.data)
+                let jwt: string = datos.data
+                localStorage.setItem("jwt", jwt)
+                props.setSession(jwt)
             })
             .catch(error => console.error(error))
     }
 
-    function Copyright(props) {
+    function Copyright(props: any) {
         return (
-            <Typography variant="body2" color="text.secondary" align="center" {...props} >
+            <Typography variant="body2" color="text.secondary" align="center"  {...props}>
                 {` Universidad de las Ciencias Informáticas. XABAL. GPE Todos los derechos reservados.
                             Producto desarrollado por: DYR.
                             Fecha de Liberación 2022 Versión 0.0.1  `}
@@ -52,7 +56,7 @@ export default function Login(props: { setSesion: Function<void> }) {
                         display: "flex", flexDirection: "column", alignItems: "center",
                     }}>
                         <img src={logo} width={350} alt="logo"/>
-                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={iniciarSesion}>
+                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={iniciarSession}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <TextField fullWidth label="Usuario" variant="standard" id="usuario"/>

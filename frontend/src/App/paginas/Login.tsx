@@ -83,7 +83,7 @@ export default function Login(props: { setSession: Function }) {
                         </Box>
                     </Box>
                 </Paper>
-                <Copyright sx={{mt: "10vh"}}/>
+                <Copyright sx={{mt: "5vh"}}/>
             </Container>
         </ThemeProvider>
     );

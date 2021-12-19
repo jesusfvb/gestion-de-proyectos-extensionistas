@@ -1,10 +1,11 @@
 import {ReactElement, useState} from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 import Login from "./paginas/Login";
 import axios from "axios";
 import BarraDeNavegacion from "./componentes/BarraDeNavegacion";
 import img_2 from "./img/identidad/img_2.png";
 import E404 from "./paginas/E404";
+import Inicio from "./paginas/Inicio";
 
 export default function App(): ReactElement {
     const hostname = window.location.hostname
@@ -29,11 +30,11 @@ export default function App(): ReactElement {
     return (
         <BrowserRouter>
             <Routes>
-
                 {(session !== null) ?
                     <>
                         <Route element={<BarraDeNavegacion serrarSession={serrarSession}/>}>
-                            <Route path="/" element={<h1>Inicio</h1>}/>
+                            <Route path="/" element={<Navigate to={"/home"}/>}/>
+                            <Route path="/home" element={<Inicio/>}/>
                         </Route>
                         <Route path="*" element={<E404/>}/>
                     </> :

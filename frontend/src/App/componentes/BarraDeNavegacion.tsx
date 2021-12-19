@@ -12,29 +12,29 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import {Fragment, MouseEvent, SyntheticEvent, useRef, useState} from "react";
+import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useRef, useState} from "react";
 import {Outlet} from "react-router";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from "../img/logo.png";
 
-export default function BarraDeNavegacion(props: { serrarSession: Function }) {
+export default function BarraDeNavegacion(props: { serrarSession: Function }): ReactElement {
     const menuId = 'primary-search-account-menu';
     const cuenta = useRef<Element>()
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
     const [value, setValue] = useState(0);
 
     const isMenuOpen = Boolean(anchorEl);
-    const handleProfileMenuOpen = (event: MouseEvent) => {
+    const handleProfileMenuOpen = (event: MouseEvent): void => {
         setAnchorEl(event.currentTarget);
     };
-    const handleMenuClose = () => {
+    const handleMenuClose = (): void => {
         setAnchorEl(null);
     };
-    const handleSerrarSession = () => {
+    const handleSerrarSession = (): void => {
         props.serrarSession()
     }
-    const handleChange = (event: SyntheticEvent, newValue: number) => {
+    const handleChange = (event: SyntheticEvent, newValue: number): void => {
         setValue(newValue);
     };
     return (

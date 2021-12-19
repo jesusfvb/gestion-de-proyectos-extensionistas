@@ -14,12 +14,12 @@ import {
 } from "@mui/material";
 import logo from '../img/logo.png'
 import axios from "axios";
-import {FormEvent} from "react";
+import {FormEvent, ReactElement} from "react";
 
-export default function Login(props: { setSession: Function }) {
+export default function Login(props: { setSession: Function }): ReactElement {
     const theme = createTheme()
 
-    const iniciarSession = (even: FormEvent) => {
+    const iniciarSession = (even: FormEvent): void => {
         even.preventDefault()
         let inputs = even.currentTarget.getElementsByTagName("input")
         console.log(inputs.namedItem("contrasenna")?.value)
@@ -36,7 +36,7 @@ export default function Login(props: { setSession: Function }) {
             .catch(error => console.error(error))
     }
 
-    function Copyright(props: any) {
+    function Copyright(props: any): ReactElement {
         return (
             <Typography variant="body2" color="text.secondary" align="center"  {...props}>
                 {` Universidad de las Ciencias Informáticas. XABAL. GPE Todos los derechos reservados.

@@ -7,7 +7,8 @@ import img_2 from "./img/identidad/img_2.png";
 import E404 from "./paginas/E404";
 
 export default function App(): ReactElement {
-    axios.defaults.baseURL = 'http://localhost:8080';
+    const hostname = window.location.hostname
+    axios.defaults.baseURL = `http://${hostname}:8080`;
     const body = document.getElementsByTagName("body")[0]
     const [session, setSession] = useState<string | null>(localStorage.getItem("jwt"))
 

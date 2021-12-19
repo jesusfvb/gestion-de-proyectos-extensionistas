@@ -55,7 +55,8 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }) {
                                             <NotificationsIcon/>
                                         </Badge>
                                     </IconButton>
-                                    <Typography variant={"overline"} sx={{fontSize: 15, marginLeft:3}}> dayanabb</Typography>
+                                    <Typography variant={"overline"}
+                                                sx={{fontSize: 15, marginLeft: 3}}> dayanabb</Typography>
                                     <IconButton
                                         size="large"
                                         edge="end"

@@ -1,4 +1,17 @@
-import {AppBar, Badge, Box, CssBaseline, Grid, IconButton, Menu, MenuItem, Tab, Tabs, Toolbar} from "@mui/material";
+import {
+    AppBar,
+    Badge,
+    Box,
+    CssBaseline,
+    Grid,
+    IconButton,
+    Menu,
+    MenuItem,
+    Tab,
+    Tabs,
+    Toolbar,
+    Typography
+} from "@mui/material";
 import {Fragment, MouseEvent, SyntheticEvent, useRef, useState} from "react";
 import {Outlet} from "react-router";
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -42,6 +55,7 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }) {
                                             <NotificationsIcon/>
                                         </Badge>
                                     </IconButton>
+                                    <Typography variant={"overline"} sx={{fontSize: 15, marginLeft:3}}> dayanabb</Typography>
                                     <IconButton
                                         size="large"
                                         edge="end"

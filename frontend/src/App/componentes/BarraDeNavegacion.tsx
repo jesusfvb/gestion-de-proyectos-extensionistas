@@ -1,17 +1,4 @@
-import {
-    AppBar,
-    Badge,
-    Box,
-    CssBaseline,
-    Grid,
-    IconButton,
-    Menu,
-    MenuItem,
-    styled,
-    Tab,
-    Tabs,
-    Toolbar
-} from "@mui/material";
+import {AppBar, Badge, Box, CssBaseline, Grid, IconButton, Menu, MenuItem, Tab, Tabs, Toolbar} from "@mui/material";
 import {Fragment, MouseEvent, SyntheticEvent, useRef, useState} from "react";
 import {Outlet} from "react-router";
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -46,9 +33,7 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }) {
             }}>
                 <Toolbar>
                     <Grid container direction={"row"} justifyContent="space-between" alignItems="center">
-                        <Grid item>
-                            <img src={logo} width={500} alt="logo"/>
-                        </Grid>
+                        <img src={logo} width={400} alt="logo" style={{margin: 0, padding: 0}}/>
                         <Grid item xl={7} lg={7} container direction="column">
                             <Grid container direction="column" justifyContent="center" alignItems="flex-end">
                                 <Box ref={cuenta}>
@@ -85,20 +70,19 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }) {
                                     </Menu>
                                 </Box>
                             </Grid>
-                            <Grid container direction="column" justifyContent="center" alignItems={"flex-start"}>
-                                <Tabs value={value} onChange={handleChange} textColor="inherit" variant="fullWidth"
-                                      sx={{minWidth: 400}}>
-                                    <Tab label="Inicio"/>
-                                    <Tab label="Proyectos"/>
-                                    <Tab label="Propuestas"/>
-                                </Tabs>
-                            </Grid>
+                            <Tabs value={value} onChange={handleChange} textColor="inherit">
+                                <Tab label="Inicio"/>
+                                <Tab label="Proyectos"/>
+                                <Tab label="Propuestas"/>
+                            </Tabs>
                         </Grid>
                     </Grid>
                 </Toolbar>
             </AppBar>
             <Toolbar/>
-            <Outlet/>
+            <Box marginTop={4}>
+                <Outlet/>
+            </Box>
         </Fragment>
     );
 }

@@ -250,9 +250,9 @@ export default function Propuestas(): ReactElement {
                             label="Area"
                             onChange={handleChangeArea}
                         >
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            <MenuItem value={30}>Facultad 4</MenuItem>
+                            <MenuItem value={20}>Deportes</MenuItem>
+                            <MenuItem value={30}>Transportación</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField

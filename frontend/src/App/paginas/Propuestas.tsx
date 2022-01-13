@@ -1,4 +1,4 @@
-import {MouseEvent, ReactElement, useEffect, useState} from "react";
+import {ChangeEvent, FormEvent, MouseEvent, ReactElement, SyntheticEvent, useEffect, useState} from "react";
 import {
     DataGrid,
     GridColumns,
@@ -7,7 +7,7 @@ import {
     GridToolbarFilterButton
 } from "@mui/x-data-grid";
 import {
-    Autocomplete,
+    Autocomplete, AutocompleteValue,
     Box,
     Button,
     CircularProgress,
@@ -72,13 +72,41 @@ export default function Propuestas(): ReactElement {
     const [open, setOpen] = useState<{ open: boolean, id: number | undefined }>({open: false, id: undefined});
     const [nombre, setNombre] = useState<string>("");
     const [coordinador, setCoordinador] = useState<any>();
-    const [area, setArea] = useState<string>('');
+    const [area, setArea] = useState<string>("");
+    const [descripcion, setDescripcion] = useState<string>("");
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
-    const [descripcion, setDescripcion] = useState<string>('');
+    const [valido, setValido] = useState<{ nombre: boolean, coordinador: boolean, area: boolean, descripcion: boolean }>({
+        nombre: true,
+        coordinador: true,
+        area: true,
+        descripcion: true
+    })
 
+    const handleChangeNombre = (event: ChangeEvent<HTMLInputElement>) => {
+        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
+        if (event.target.value.length === 0) {
+            setValido({...valido, nombre: true})
+        } else {
+            setValido({...valido, nombre: reg.test(event.target.value)})
+        }
+        setNombre(event.target.value)
+    }
     const handleChangeArea = (event: SelectChangeEvent) => {
+        if (event.target.value !== "") {
+            setValido({...valido, area: false})
+        } else {
+            setValido({...valido, area: true})
+        }
         setArea(event.target.value as string);
     };
+    const handleChangeDescripcion = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        if (event.target.value.length === 0) {
+            setValido({...valido, descripcion: true})
+        } else {
+            setValido({...valido, descripcion: false})
+        }
+        setDescripcion(event.target.value)
+    }
 
     const handleClickOpen = (id: number | undefined = undefined) => (evento: MouseEvent) => {
         evento.stopPropagation()
@@ -88,6 +116,12 @@ export default function Propuestas(): ReactElement {
             setCoordinador(propuesta.coordinador)
             setArea(propuesta.area)
             setDescripcion(propuesta.descripcion)
+            setValido({
+                nombre: false,
+                coordinador: false,
+                area: false,
+                descripcion: false
+            })
         }
         setOpen({open: true, id: id});
     };
@@ -97,38 +131,47 @@ export default function Propuestas(): ReactElement {
         setCoordinador(null)
         setArea("")
         setDescripcion("")
+        setValido({
+            nombre: true,
+            coordinador: true,
+            area: true,
+            descripcion: true
+        })
     };
 
-    const save = () => {
-        if (open.id !== undefined) {
-            axios
-                .put("/propuestas", {
-                    id: open.id,
-                    nombre: nombre,
-                    idCoordinador: coordinador.id,
-                    area: area,
-                    descripcion: descripcion,
-                })
-                .then(response => {
-                    let newRow = [...rows]
-                    newRow[newRow.findIndex((row: any) => row.id === open.id)] = response.data
-                    setRows(newRow)
-                    handleClickClose()
-                })
-                .catch(error => console.error(error))
-        } else {
-            axios
-                .post("/propuestas", {
-                    nombre: nombre,
-                    idCoordinador: coordinador.id,
-                    area: area,
-                    descripcion: descripcion,
-                })
-                .then(response => {
-                    setRows([...rows, response.data])
-                    handleClickClose()
-                })
-                .catch(error => console.error(error))
+    const save = (evnt: FormEvent) => {
+        evnt.preventDefault()
+        if (!valido.nombre && !valido.area && !valido.descripcion && !valido.coordinador) {
+            if (open.id !== undefined) {
+                axios
+                    .put("/propuestas", {
+                        id: open.id,
+                        nombre: nombre,
+                        idCoordinador: coordinador?.id,
+                        area: area,
+                        descripcion: descripcion,
+                    })
+                    .then(response => {
+                        let newRow = [...rows]
+                        newRow[newRow.findIndex((row: any) => row.id === open.id)] = response.data
+                        setRows(newRow)
+                        handleClickClose()
+                    })
+                    .catch(error => console.error(error))
+            } else {
+                axios
+                    .post("/propuestas", {
+                        nombre: nombre,
+                        idCoordinador: coordinador?.id,
+                        area: area,
+                        descripcion: descripcion,
+                    })
+                    .then(response => {
+                        setRows([...rows, response.data])
+                        handleClickClose()
+                    })
+                    .catch(error => console.error(error))
+            }
         }
     }
     const borrar = (id: number | undefined = undefined) => (event: MouseEvent) => {
@@ -176,13 +219,22 @@ export default function Propuestas(): ReactElement {
             }
         }, [loading]);
 
+        const handleChange = (event: SyntheticEvent, newValue: AutocompleteValue<any, any, any, any>) => {
+            if (newValue !== null) {
+                setValido({...valido, coordinador: false})
+            } else {
+                setValido({...valido, coordinador: true})
+            }
+            setCoordinador(newValue)
+        }
+
         return (
             <Autocomplete
                 id="nombre"
                 sx={{width: "100%", paddingTop: 2}}
                 open={open}
                 value={coordinador}
-                onChange={(event, newValue) => setCoordinador(newValue)}
+                onChange={handleChange}
                 onOpen={() => {
                     setOpen(true);
                 }}
@@ -197,6 +249,7 @@ export default function Propuestas(): ReactElement {
                     <TextField
                         {...params}
                         label="Propuesta de coordinador"
+                        error={valido.coordinador}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
@@ -238,7 +291,8 @@ export default function Propuestas(): ReactElement {
                         fullWidth
                         variant="outlined"
                         value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
+                        onChange={handleChangeNombre}
+                        error={valido.nombre}
                     />
                     <MyAutocomplete/>
                     <FormControl fullWidth sx={{marginTop: 2}}>
@@ -249,6 +303,7 @@ export default function Propuestas(): ReactElement {
                             value={area}
                             label="Area"
                             onChange={handleChangeArea}
+                            error={valido.area}
                         >
                             <MenuItem value={10}>Ten</MenuItem>
                             <MenuItem value={20}>Twenty</MenuItem>
@@ -264,7 +319,8 @@ export default function Propuestas(): ReactElement {
                         variant="outlined"
                         sx={{marginTop: 2}}
                         value={descripcion}
-                        onChange={(e) => setDescripcion(e.target.value)}
+                        error={valido.descripcion}
+                        onChange={handleChangeDescripcion}
                     />
                 </DialogContent>
                 <DialogActions>

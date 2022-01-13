@@ -1,11 +1,10 @@
-import {Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Typography} from "@mui/material";
+import {Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CallIcon from '@mui/icons-material/Call';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import {ReactElement} from "react";
 
 export default function Inicio(): ReactElement {
-
 
     function BarraLateral(): ReactElement {
         return (
@@ -69,7 +68,14 @@ export default function Inicio(): ReactElement {
 
     return (
         <Grid container direction={"row"}>
-            <Grid item xl={true} lg={true}>1</Grid>
+            <Grid item container direction={"column"} xl={true} lg={true}>
+                <Grid item>
+                    1
+                </Grid>
+                <Grid item>
+                    2
+                </Grid>
+            </Grid>
             <BarraLateral/>
         </Grid>
     )

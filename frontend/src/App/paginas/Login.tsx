@@ -22,7 +22,6 @@ export default function Login(props: { setSession: Function }): ReactElement {
     const iniciarSession = (even: FormEvent): void => {
         even.preventDefault()
         let inputs = even.currentTarget.getElementsByTagName("input")
-        console.log(inputs.namedItem("contrasenna")?.value)
         axios
             .post("/login", {
                 usuario: inputs.namedItem("usuario")?.value,

@@ -3,12 +3,10 @@ package com.backend.backend.servicios.implementacion;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,29 +15,33 @@ import java.util.function.Function;
 @Service
 public class JwtSI {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final String SECRET_KEY = "GDRE";
 
     public String extractUserName(String token) {
-        String salida = extractClaim(token, Claims::getSubject);
-        salida = salida.substring(0, salida.indexOf(","));
+        String salida = null;
+        try {
+            salida = extractClaim(token, Claims::getSubject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return salida;
-    }
-
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
     }
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         String subject = userDetails.getUsername();
-        for (GrantedAuthority authority : userDetails.getAuthorities()) {
-            subject += "," + authority.getAuthority();
-        }
+        claims.put("roles", userDetails.getAuthorities());
         return createToken(claims, subject);
     }
 
     public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        boolean salida = false;
+        try {
+            salida = extractExpiration(token).before(new Date());
+        } catch (Exception e) {
+            salida = true;
+        }
+        return salida;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -47,19 +49,23 @@ public class JwtSI {
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private Date extractExpiration(String token) throws Exception {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws Exception {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60) * 10))
-                .signWith(SignatureAlgorithm.HS256, key).compact();
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
 }

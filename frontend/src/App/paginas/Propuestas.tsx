@@ -250,9 +250,25 @@ export default function Propuestas(): ReactElement {
                             label="Area"
                             onChange={handleChangeArea}
                         >
-                            <MenuItem value={30}>Facultad 4</MenuItem>
-                            <MenuItem value={20}>Deportes</MenuItem>
-                            <MenuItem value={30}>Transportación</MenuItem>
+                            <MenuItem value={'Facultad_1'}>Facultad 1</MenuItem>
+                            <MenuItem value={'Facultad_2'}>Facultad 2</MenuItem>
+                            <MenuItem value={'Facultad_3'}>Facultad 3</MenuItem>
+                            <MenuItem value={'Facultad_4'}>Facultad 4</MenuItem>
+                            <MenuItem value={'Facultad_fte'}>Facultad FTE</MenuItem>
+                            <MenuItem value={'Facultad_6'}>Facultad 6</MenuItem>
+                            <MenuItem value={'Deportes'}>Deportes</MenuItem>
+                            <MenuItem value={'CIDI'}>CIDI</MenuItem>
+                            <MenuItem value={'CESOL'}>CESOL</MenuItem>
+                            <MenuItem value={'TLM'}>TLM</MenuItem>
+                            <MenuItem value={'CIGED'}>CIGED</MenuItem>
+                            <MenuItem value={'CEGEL'}>CEGEL</MenuItem>
+                            <MenuItem value={'CEIGE'}>CEIGE</MenuItem>
+                            <MenuItem value={'FORTES'}>FORTES</MenuItem>
+                            <MenuItem value={'CREAD'}>CREAD</MenuItem>
+                            <MenuItem value={'CTI'}>CTI</MenuItem>
+                            <MenuItem value={'CENTRO_DE_SOPORTE'}>CENTRO DE SOPORTE</MenuItem>
+                            <MenuItem value={'Fuera_de_la_universidad'}>Fuera de la universidad </MenuItem>
+                            <MenuItem value={'Transportación'}>Transportación</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField

@@ -22,7 +22,7 @@ export default function E404(): ReactElement {
                 alignItems="center"
             >
                 <Grid item>
-                    {<img src={robot404} width={500} alt="robot404"/>}
+                    {<img src={robot404} width={700} alt="robot404"/>}
                 </Grid>
 
                 <Grid item>

@@ -12,17 +12,19 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useRef, useState} from "react";
-import {Outlet} from "react-router";
+import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useEffect, useRef, useState} from "react";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from "../img/logo.png";
+import {useLocation, useNavigate, Outlet} from "react-router-dom";
 
 export default function BarraDeNavegacion(props: { serrarSession: Function }): ReactElement {
     const menuId = 'primary-search-account-menu';
+    const location = useLocation()
+    const navegate = useNavigate()
     const cuenta = useRef<Element>()
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState<string>("/inicio");
 
     const isMenuOpen = Boolean(anchorEl);
     const handleProfileMenuOpen = (event: MouseEvent): void => {
@@ -34,9 +36,19 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
     const handleSerrarSession = (): void => {
         props.serrarSession()
     }
-    const handleChange = (event: SyntheticEvent, newValue: number): void => {
+
+    const handleChange = (event: SyntheticEvent, newValue: string): void => {
+        navegate(newValue)
         setValue(newValue);
     };
+
+    useEffect(() => {
+        if (location.pathname === "/") {
+            setValue("/inicio")
+        } else {
+            setValue(location.pathname)
+        }
+    }, [location.pathname])
     return (
         <Fragment>
             <CssBaseline/>
@@ -86,9 +98,9 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                 </Box>
                             </Grid>
                             <Tabs value={value} onChange={handleChange} textColor="inherit">
-                                <Tab label="Inicio"/>
-                                <Tab label="Proyectos"/>
-                                <Tab label="Propuestas"/>
+                                <Tab label="Inicio" value={"/inicio"}/>
+                                <Tab label="Proyectos" value={"/proyectos"}/>
+                                <Tab label="Propuestas" value={"/propuestas"}/>
                             </Tabs>
                         </Grid>
                     </Grid>

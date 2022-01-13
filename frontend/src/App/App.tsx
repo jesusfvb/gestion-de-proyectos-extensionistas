@@ -18,7 +18,6 @@ export default function App(): ReactElement {
         localStorage.clear()
         setSession(false)
     }
-
     if (session !== false) {
         body.style.minHeight = "100vh"
         body.style.background = `linear-gradient(#fff9  , #fff9),url(${img_2})`;

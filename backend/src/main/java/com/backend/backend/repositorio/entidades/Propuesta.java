@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Propuesta extends Entidad {
-    public enum Estado {PENDIENTE}
+    public enum Estado {PENDIENTE, APROBADO, DENEGADO}
 
     @Column
     private String nombre;

@@ -7,6 +7,7 @@ import img_2 from "./img/identidad/img_2.png";
 import E404 from "./paginas/E404";
 import Inicio from "./paginas/Inicio";
 import Propuestas from "./paginas/Propuestas";
+import Proyectos from "./paginas/Proyectos";
 
 export default function App(): ReactElement {
     const hostname = window.location.hostname
@@ -48,6 +49,7 @@ export default function App(): ReactElement {
                             <Route path="/" element={<Navigate to={"/inicio"}/>}/>
                             <Route path="/inicio" element={<Inicio/>}/>
                             <Route path="/propuestas" element={<Propuestas/>}/>
+                            <Route path="/proyectos" element={<Proyectos/>}/>
                         </Route>
                         <Route path="*" element={<E404/>}/>
                     </>

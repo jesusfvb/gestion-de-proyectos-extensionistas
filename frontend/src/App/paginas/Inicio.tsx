@@ -1,10 +1,35 @@
-import {Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Grid,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Typography
+} from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CallIcon from '@mui/icons-material/Call';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import {ReactElement} from "react";
+import {ReactElement, useState} from "react";
+import img1 from '../img/1.jpg'
 
 export default function Inicio(): ReactElement {
+
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
 
     function BarraLateral(): ReactElement {
         return (
@@ -68,15 +93,63 @@ export default function Inicio(): ReactElement {
 
     return (
         <Grid container direction={"row"}>
-            <Grid item container direction={"column"} xl={true} lg={true}>
-                <Grid item>
-                    1
-                </Grid>
-                <Grid item>
-                    2
-                </Grid>
+            <Grid item container xl={true} lg={true} sx={{height: 'calc(100vh - 96px)', overflow: 'auto'}}>
+                {[1, 2, 4, 5, 6, 7, 8, 9, 10].map((value) =>
+                    <Grid item sx={{margin: 2}}>
+                        <Card sx={{maxWidth: 345}} onClick={handleClickOpen}>
+                            <CardActionArea>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image={img1}
+                                    alt="green iguana"
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        Lizard
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Lizards are a widespread group of squamate reptiles, with over 6,000
+                                        species, ranging across all continents except Antarctica
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </Grid>
+                )}
             </Grid>
             <BarraLateral/>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <Card sx={{maxWidth: 345, margin: 1}} onClick={handleClickOpen}>
+                    <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            height="140"
+                            image={img1}
+                            alt="green iguana"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                Lizard
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Lizards are a widespread group of squamate reptiles, with over 6,000
+                                species, ranging across all continents except Antarctica
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+                <DialogActions>
+                    <Button onClick={handleClose}>Inscribirse</Button>
+                    <Button onClick={handleClose} color={"secondary"}>Almacenar</Button>
+                    <Button onClick={handleClose} color={"error"} autoFocus> Salir </Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     )
 }

@@ -31,7 +31,7 @@ export default function Propuestas(): ReactElement {
         {
             field: "nombre",
             flex: 1,
-            type: "number",
+            type: "string",
             headerName: "Nombre",
             headerAlign: "left",
             align: "left"
@@ -50,7 +50,8 @@ export default function Propuestas(): ReactElement {
             type: "singleSelect",
             headerName: "Estado",
             headerAlign: "left",
-            align: "left"
+            align: "left",
+            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
         },
         {
             field: "id",

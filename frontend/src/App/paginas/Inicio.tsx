@@ -17,7 +17,9 @@ import CallIcon from '@mui/icons-material/Call';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import {ReactElement, useState} from "react";
 import img1 from '../img/1.jpg'
-
+import img2 from '../img/imagen2.jpg'
+import img3 from '../img/imagen3.jpg'
+import img4 from '../img/imagen4.jpg'
 export default function Inicio(): ReactElement {
 
     const [open, setOpen] = useState(false);
@@ -94,23 +96,43 @@ export default function Inicio(): ReactElement {
     return (
         <Grid container direction={"row"}>
             <Grid item container xl={true} lg={true} sx={{height: 'calc(100vh - 96px)', overflow: 'auto'}}>
-                {[1, 2, 4, 5, 6, 7, 8, 9, 10].map((value) =>
+                {[{
+                    nombre: "Peque Ciudad",
+                    descripcion: "PequeCiudad es un proyecto extensionista infantil que surgió el 14 de octubre de 2016, tiene como objetivo desarrollar la inteligencia emocional, el lenguaje oral y escrito, la imaginación, las relaciones sociales y los...",
+                    imagen: img1, 
+                },
+                      {
+                    nombre: "Movimiento de Radialistas en la Red",
+                    descripcion: "El Movimiento de Radialistas en la Red tiene su incidencia fundamental en el desarrollo de la programación de la radio web universitaria, Radio Ciudad Digital. Posibilita a estudiantes, profesores y trabajadores un espacio para el ...",
+                    imagen: img2,  
+                },  
+                   {
+                   nombre: "Talentos de Hierro",
+                   descripcion: "Siguiendo la política de la práctica de ejercicios físicos y deportes como vía para el desarrollo de un joven profesional altamente competitivo, la Universidad de las Ciencias Informáticas (UCI) desde su creación fomentó...",    
+                   imagen: img3,       
+                },   
+                  {
+                      nombre: "Acciones de motivación y orientación vocacional",
+                      descripcion: "La Formación Vocacional y Orientación Vocacional constituye base del desarrollo económico-social de cualquier nación. De la concepción, organización y ejecución de... ",
+                      imagen: img4,
+                  }    
+
+                     ].map((value) =>
                     <Grid item sx={{margin: 2}}>
                         <Card sx={{maxWidth: 345}} onClick={handleClickOpen}>
                             <CardActionArea>
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image={img1}
+                                    image={value.imagen}
                                     alt="green iguana"
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        Lizard
+                                        {value.nombre }
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        Lizards are a widespread group of squamate reptiles, with over 6,000
-                                        species, ranging across all continents except Antarctica
+                                        {value.descripcion}
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>

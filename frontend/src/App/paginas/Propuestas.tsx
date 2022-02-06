@@ -2,12 +2,15 @@ import {ChangeEvent, FormEvent, MouseEvent, ReactElement, SyntheticEvent, useEff
 import {
     DataGrid,
     GridColumns,
+    GridRowParams,
     GridSelectionModel,
     GridToolbarContainer,
-    GridToolbarFilterButton
+    GridToolbarFilterButton,
+    MuiEvent
 } from "@mui/x-data-grid";
 import {
-    Autocomplete, AutocompleteValue,
+    Autocomplete,
+    AutocompleteValue,
     Box,
     Button,
     CircularProgress,
@@ -16,14 +19,17 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    Grid,
     IconButton,
     InputLabel,
     MenuItem,
+    Paper,
     Select,
     SelectChangeEvent,
-    TextField
+    TextField,
+    Typography
 } from "@mui/material";
-import {Add, Delete, Update} from "@mui/icons-material";
+import {Add, Delete, Description, LocationOn, Person, Update} from "@mui/icons-material";
 import axios from "axios";
 
 export default function Propuestas(): ReactElement {
@@ -82,6 +88,7 @@ export default function Propuestas(): ReactElement {
         area: true,
         descripcion: true
     })
+    const [selected, setSelected] = useState<any>()
 
     const handleChangeNombre = (event: ChangeEvent<HTMLInputElement>) => {
         let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
@@ -139,6 +146,11 @@ export default function Propuestas(): ReactElement {
             descripcion: true
         })
     };
+
+    const handleClickRow = (params: GridRowParams, event: MuiEvent<MouseEvent<HTMLElement>>) => {
+        event.preventDefault()
+        setSelected(rows.find(value => value.id === params.id))
+    }
 
     const save = (evnt: FormEvent) => {
         evnt.preventDefault()
@@ -269,17 +281,81 @@ export default function Propuestas(): ReactElement {
     useEffect(() => {
         axios
             .get("/propuestas")
-            .then(response => setRows(response.data))
+            .then(response => {
+                setRows(response.data)
+                setSelected(response.data[0])
+            })
             .catch(error => console.error(error))
     }, [])
     return (
-        <div style={{height: "calc(100vh - 100px)"}}>
-            <DataGrid autoPageSize={true} columns={columns} rows={rows} components={{Toolbar: MyToolbar,}}
-                      checkboxSelection
-                      onSelectionModelChange={(newSelectionModel) => {
-                          setSelectionModel(newSelectionModel);
-                      }}
-                      selectionModel={selectionModel}/>
+        <div>
+            <Grid container>
+                <Grid style={{height: "calc(100vh - 100px)"}} xl={true}>
+                    <DataGrid autoPageSize={true} columns={columns} rows={rows} components={{Toolbar: MyToolbar,}}
+                              checkboxSelection
+                              onSelectionModelChange={(newSelectionModel) => {
+                                  setSelectionModel(newSelectionModel);
+                              }}
+                              onRowClick={handleClickRow}
+                              disableSelectionOnClick={true}
+                              selectionModel={selectionModel}/>
+                </Grid>
+                <Grid xl={3}>
+                    <Paper>
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="left"
+                            alignItems="flex-start"
+                        >
+                            <Typography sx={{marginLeft: 2, marginBottom: 2, marginTop: 1}} variant={"h4"}>
+                                {selected?.nombre}
+                            </Typography>
+                            <Typography sx={{marginLeft: 2, marginBottom: 1,}} variant={"subtitle1"}>
+                                Información
+                            </Typography>
+                            <Grid item container direction="row" sx={{marginBottom: 1}}>
+                                <Person sx={{marginLeft: 2, marginRight: 1}}/>
+                                <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                    Coordinador:
+                                </Typography>
+                                <Typography variant={"h5"}>
+                                    {selected?.coordinador.nombre}
+                                </Typography>
+                            </Grid>
+                            <Grid item container direction="row" sx={{marginBottom: 1}}>
+                                <LocationOn sx={{marginLeft: 2, marginRight: 1}}/>
+                                <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                    Area:
+                                </Typography>
+                                <Typography variant={"h5"}>
+                                    {selected?.area}
+                                </Typography>
+                            </Grid>
+                            <Grid item container direction="column">
+                                <Grid item container direction="row" sx={{marginBottom: 1}}>
+                                    <Description sx={{marginLeft: 2, marginRight: 1}}/>
+                                    <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                        Descripción:
+                                    </Typography>
+                                </Grid>
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    multiline
+                                    rows={12}
+                                    defaultValue="Default Value"
+                                    value={selected?.descripcion}
+                                    sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
+                                    onChange={(event) => {
+                                        event.stopPropagation()
+                                        event.target.value = selected?.descripcion
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
+            </Grid>
             <Dialog open={open.open} onClose={handleClickClose}>
                 <DialogTitle>Nueva Propuesta</DialogTitle>
                 <DialogContent sx={{width: 350}}>

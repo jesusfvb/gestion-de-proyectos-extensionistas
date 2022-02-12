@@ -30,28 +30,31 @@ export default function Inicio(): ReactElement {
             nombre: "Peque Ciudad",
             descripcion: "PequeCiudad es un proyecto extensionista infantil que surgió el 14 de octubre de 2016, tiene como objetivo desarrollar la inteligencia emocional, el lenguaje oral y escrito, la imaginación, las relaciones sociales y los...",
             imagen: img1,
-            mas: ""
+            mas: "distintos roles radiofónicos, promover los juegos tradicionales, la cultura y la música infantil, todo esto formando en ellos valores como la amistad, la solidaridad, la responsabilidad, la profesionalidad, el patriotismo, entre otros. Además, organiza talleres de idioma, teatro, música y danza. Está orientado fundamentalmente, a los niños que conviven en la comunidad universitaria."
+            
+        
         },
         {
             id: 2,
             nombre: "Movimiento de Radialistas en la Red",
             descripcion: "El Movimiento de Radialistas en la Red tiene su incidencia fundamental en el desarrollo de la programación de la radio web universitaria, Radio Ciudad Digital. Posibilita a estudiantes, profesores y trabajadores un espacio para el ...",
             imagen: img2,
-            mas: ""
+            mas: "desarrollo de sus habilidades en el medio radial; logra estabilidad en sus colectivos de programas; capacita a los radialistas; y mejora la calidad en general de la programación. Se espera que los implicados ganen seguridad, fluidez y calidad en la expresión oral, proyección e improvisación así como dominio del lenguaje y técnicas oratorias; herramientas fundamentales para los profesionales."
+
         },
         {
             id: 3,
             nombre: "Talentos de Hierro",
             descripcion: "Siguiendo la política de la práctica de ejercicios físicos y deportes como vía para el desarrollo de un joven profesional altamente competitivo, la Universidad de las Ciencias Informáticas (UCI) desde su creación fomentó...",
             imagen: img3,
-            mas: ""
+            mas: "el desarrollo deportivo a toda la comunidad universitaria y esto trajo como consecuencia logros del deporte universitario UCI al más alto nivel, que en estos casos se traduce como Universiadas Nacionales Universitarias y Campeonatos Nacionales Universitarios."
         },
         {
             id: 4,
             nombre: "Acciones de motivación y orientación vocacional",
             descripcion: "La Formación Vocacional y Orientación Vocacional constituye base del desarrollo económico-social de cualquier nación. De la concepción, organización y ejecución de... ",
             imagen: img4,
-            mas: ""
+            mas: "una estrategia estatal e institucional depende en gran medida la preparación y formación de miles de profesionales, que bien orientados, conozcan y descubran los saberes, las especialidades donde orientar los estudios futuros."
         }])
     const [open, setOpen] = useState<{ open: boolean, id: number }>({open: false, id: -1});
 

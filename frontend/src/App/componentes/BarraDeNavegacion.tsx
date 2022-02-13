@@ -91,8 +91,7 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                               horizontal: 'right'
                                           }}
                                     >
-                                        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                                        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                                       
                                         <MenuItem onClick={handleSerrarSession}>Cerrar Sesión</MenuItem>
                                     </Menu>
                                 </Box>

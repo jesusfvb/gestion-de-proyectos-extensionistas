@@ -8,7 +8,6 @@ import {
     DialogActions,
     Grid,
     List,
-    ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
@@ -22,6 +21,9 @@ import img1 from '../img/1.jpg'
 import img2 from '../img/imagen2.jpg'
 import img3 from '../img/imagen3.jpg'
 import img4 from '../img/imagen4.jpg'
+import document1 from '../documentos/formato para inscribir.pdf'
+import document2 from '../documentos/Manualde procedimientos.pdf'
+import document3 from '../documentos/Procedimiento proyectos.pdf'
 
 export default function Inicio(): ReactElement {
     const [row, setRow] = useState<Array<any>>([
@@ -61,7 +63,6 @@ export default function Inicio(): ReactElement {
     const handleClickOpen = (id: number) => () => {
         setOpen({open: true, id: id});
     };
-
     const handleClose = () => {
         setOpen({open: false, id: -1});
     };
@@ -79,31 +80,25 @@ export default function Inicio(): ReactElement {
                 </Typography>
                 <Grid sx={{width: "90%", backgroundColor: "#fff5"}}>
                     <List>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <PictureAsPdfIcon/>
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary="Formato para inscribir los proyectos extensionistas universitarios"/>
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <PictureAsPdfIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Manual de procedimiento para crear proyectos socioculturales"/>
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <PictureAsPdfIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Inscripción de proyectos extensionistas universitarios"/>
-                            </ListItemButton>
-                        </ListItem>
+                        <ListItemButton component="a" download href={document1}>
+                            <ListItemIcon>
+                                <PictureAsPdfIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="Formato para inscribir los proyectos extensionistas universitarios"/>
+                        </ListItemButton>
+                        <ListItemButton component="a" download href={document2}>
+                            <ListItemIcon>
+                                <PictureAsPdfIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Manual de procedimiento para crear proyectos socioculturales"/>
+                        </ListItemButton>
+                        <ListItemButton component="a" download href={document3}>
+                            <ListItemIcon>
+                                <PictureAsPdfIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Inscripción de proyectos extensionistas universitarios"/>
+                        </ListItemButton>
                     </List>
                 </Grid>
                 <Typography variant={"h4"}>
@@ -136,22 +131,23 @@ export default function Inicio(): ReactElement {
         }
         return (
             <Card sx={{maxWidth: 345, margin: 1}}>
-                <CardActionArea>
-                    <CardMedia
-                        component="img"
-                        height="140"
-                        image={value?.imagen}
-                        alt="green iguana"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {value?.nombre}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {descripcion}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
+                <CardMedia
+                    component="img"
+                    height="140"
+                    image={value?.imagen}
+                    alt="green iguana"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        {value?.nombre}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{
+                        maxHeight: 300,
+                        overflowY: "auto"
+                    }}>
+                        {descripcion}
+                    </Typography>
+                </CardContent>
             </Card>)
     }
 

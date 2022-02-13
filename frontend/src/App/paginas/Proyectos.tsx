@@ -9,7 +9,7 @@ import {
 import {
     Autocomplete, AutocompleteValue,
     Box,
-    Button,
+    Button, ButtonGroup,
     CircularProgress,
     Dialog,
     DialogActions,
@@ -87,6 +87,11 @@ export default function Proyectos(): ReactElement {
         return (
             <GridToolbarContainer>
                 <GridToolbarFilterButton/>
+                <ButtonGroup size={"small"} sx={{marginLeft: 1}}>
+                    <Button variant={"contained"}>Actuales</Button>
+                    <Button>Culminados</Button>
+                    <Button>Almacenados</Button>
+                </ButtonGroup>
                 <Box sx={{flexGrow: 1}}/>
                 <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={borrar()}>
                     <Delete/>
@@ -96,11 +101,12 @@ export default function Proyectos(): ReactElement {
     }
 
     useEffect(() => {
-        axios
-            .get("/propuestas")
-            .then(response => setRows(response.data))
-            .catch(error => console.error(error))
-    }, [])
+            axios
+                .get("/propuestas")
+                .then(response => setRows(response.data))
+                .catch(error => console.error(error))
+        }
+        , [])
     return (
         <div style={{height: "calc(100vh - 100px)"}}>
             <DataGrid autoPageSize={true} columns={columns} rows={rows} components={{Toolbar: MyToolbar,}}

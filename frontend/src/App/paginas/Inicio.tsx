@@ -142,7 +142,7 @@ export default function Inicio(): ReactElement {
                         {value?.nombre}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{
-                        maxHeight: 300,
+                        maxHeight: 200,
                         overflowY: "auto"
                     }}>
                         {descripcion}

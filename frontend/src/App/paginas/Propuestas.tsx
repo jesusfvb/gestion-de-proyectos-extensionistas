@@ -290,7 +290,7 @@ export default function Propuestas(): ReactElement {
     return (
         <div>
             <Grid container>
-                <Grid style={{height: "calc(100vh - 100px)"}} xl={true}>
+                <Grid style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
                     <DataGrid autoPageSize={true} columns={columns} rows={rows} components={{Toolbar: MyToolbar,}}
                               checkboxSelection
                               onSelectionModelChange={(newSelectionModel) => {
@@ -300,7 +300,7 @@ export default function Propuestas(): ReactElement {
                               disableSelectionOnClick={true}
                               selectionModel={selectionModel}/>
                 </Grid>
-                <Grid xl={3}>
+                <Grid xl={3} lg={3}>
                     <Paper>
                         <Grid
                             container

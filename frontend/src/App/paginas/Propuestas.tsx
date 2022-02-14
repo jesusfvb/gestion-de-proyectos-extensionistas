@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, MouseEvent, ReactElement, SyntheticEvent, useEffect, useState} from "react";
+import {ChangeEvent, FormEvent, MouseEvent, ReactElement, SyntheticEvent, useContext, useEffect, useState} from "react";
 import {
     DataGrid,
     GridColumns,
@@ -31,8 +31,10 @@ import {
 } from "@mui/material";
 import {Add, Delete, Description, LocationOn, Person, Update} from "@mui/icons-material";
 import axios from "axios";
+import {DatosUser} from "../App";
 
 export default function Propuestas(): ReactElement {
+    const datoUser = useContext(DatosUser)
     const columns: GridColumns = [
         {
             field: "nombre",
@@ -178,6 +180,7 @@ export default function Propuestas(): ReactElement {
                         idCoordinador: coordinador?.id,
                         area: area,
                         descripcion: descripcion,
+                        autor: datoUser.usuario,
                     })
                     .then(response => {
                         setRows([...rows, response.data])
@@ -280,7 +283,7 @@ export default function Propuestas(): ReactElement {
 
     useEffect(() => {
         axios
-            .get("/propuestas")
+            .get("/propuestas/usuario/" + datoUser.usuario)
             .then(response => {
                 setRows(response.data)
                 setSelected(response.data[0])
@@ -290,7 +293,7 @@ export default function Propuestas(): ReactElement {
     return (
         <div>
             <Grid container>
-                <Grid style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
+                <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
                     <DataGrid autoPageSize={true} columns={columns} rows={rows} components={{Toolbar: MyToolbar,}}
                               checkboxSelection
                               onSelectionModelChange={(newSelectionModel) => {
@@ -300,7 +303,7 @@ export default function Propuestas(): ReactElement {
                               disableSelectionOnClick={true}
                               selectionModel={selectionModel}/>
                 </Grid>
-                <Grid xl={3} lg={3}>
+                <Grid item xl={3} lg={3} md={2} sm={2} xs={2}>
                     <Paper>
                         <Grid
                             container

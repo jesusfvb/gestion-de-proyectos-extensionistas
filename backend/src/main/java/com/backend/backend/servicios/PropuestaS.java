@@ -12,9 +12,12 @@ public interface PropuestaS {
 
     List<PropuestaResp> listar();
 
+    List<PropuestaResp> listarPorUsuario(String usuario);
+
     PropuestaResp add(PropuestaSo propuesta);
+
+    PropuestaResp update(PropuestaUpSo propuesta);
 
     Integer[] borrar(Integer[] ids);
 
-    PropuestaResp update(PropuestaUpSo propuesta);
 }

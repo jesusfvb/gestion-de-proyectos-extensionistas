@@ -19,24 +19,19 @@ public class Propuesta extends Entidad {
     @Column
     private LocalDateTime fechaSolicitud;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column()
     private Estado estado;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coordinador_id")
     private Usuario coordinador;
 
-    public Propuesta() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
 
-    public Propuesta(String nombre, String area, String description, Integer idCoordinador) {
-        this.nombre = nombre;
-        this.area = area;
-        this.description = description;
-        this.coordinador = new Usuario(idCoordinador);
-        this.fechaSolicitud = LocalDateTime.now();
-        this.estado = Estado.PENDIENTE;
+    public Propuesta() {
     }
 
     public String getNombre() {
@@ -87,5 +82,13 @@ public class Propuesta extends Entidad {
 
     public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
         this.fechaSolicitud = fechaSolicitud;
+    }
+
+    public Usuario getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Usuario autor) {
+        this.autor = autor;
     }
 }

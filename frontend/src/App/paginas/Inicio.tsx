@@ -156,7 +156,7 @@ export default function Inicio(): ReactElement {
             <Grid item container xl={true} lg={true} sx={{height: 'calc(100vh - 96px)', overflow: 'auto'}}>
                 {row.map((value) =>
                     <Grid item sx={{margin: 2}} key={value.id}>
-                        <Card sx={{maxWidth: 345}} onClick={handleClickOpen(value.id)}>
+                        <Card sx={{maxWidth: 330, height:350}} onClick={handleClickOpen(value.id)}>
                             <CardActionArea>
                                 <CardMedia
                                     component="img"

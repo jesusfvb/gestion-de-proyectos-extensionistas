@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+import com.backend.backend.repositorio.entidades.Usuario;
+import com.backend.backend.servicios.UsuarioS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,17 +19,17 @@ import org.springframework.stereotype.Service;
 public class UserDetailsSI implements UserDetailsService {
 
 
+    @Autowired
+    private UsuarioS usuarioS;
+
     @Override
     public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
 
+        Usuario usuario = usuarioS.getByUsuario(arg0);
+
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return "ADMINISTRADOR";
-            }
-        });
-        return new User("admin", "1234", authorities);
+        authorities.add(new SimpleGrantedAuthority(usuario.getRol().name()));
+        return new User(usuario.getUsuario(), usuario.getContrasenna(), authorities);
     }
 
 }

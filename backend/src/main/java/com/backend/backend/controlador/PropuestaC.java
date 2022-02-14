@@ -23,6 +23,12 @@ public class PropuestaC {
         return ResponseEntity.ok(propuestaS.listar());
     }
 
+
+    @GetMapping("/usuario/{usuario}")
+    private ResponseEntity<List<PropuestaResp>> listarPorUsuario(@PathVariable String usuario) {
+        return ResponseEntity.ok(propuestaS.listarPorUsuario(usuario));
+    }
+
     @PostMapping
     private ResponseEntity<PropuestaResp> add(@RequestBody PropuestaSo propuesta) {
         return ResponseEntity.ok(propuestaS.add(propuesta));

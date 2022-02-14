@@ -12,17 +12,19 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useEffect, useRef, useState} from "react";
+import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useContext, useEffect, useRef, useState} from "react";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from "../img/logo.png";
 import {useLocation, useNavigate, Outlet} from "react-router-dom";
+import {DatosUser} from "../App";
 
 export default function BarraDeNavegacion(props: { serrarSession: Function }): ReactElement {
     const menuId = 'primary-search-account-menu';
     const location = useLocation()
     const navegate = useNavigate()
     const cuenta = useRef<Element>()
+    const datosUser = useContext(DatosUser)
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
     const [value, setValue] = useState<string>("/inicio");
 
@@ -68,7 +70,7 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                         </Badge>
                                     </IconButton>
                                     <Typography variant={"overline"}
-                                                sx={{fontSize: 15, marginLeft: 3}}> dayanabb</Typography>
+                                                sx={{fontSize: 15, marginLeft: 3}}> {datosUser.usuario}</Typography>
                                     <IconButton
                                         size="large"
                                         edge="end"
@@ -91,7 +93,7 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                               horizontal: 'right'
                                           }}
                                     >
-                                       
+
                                         <MenuItem onClick={handleSerrarSession}>Cerrar Sesión</MenuItem>
                                     </Menu>
                                 </Box>

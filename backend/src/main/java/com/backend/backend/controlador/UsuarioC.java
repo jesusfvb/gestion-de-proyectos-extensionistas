@@ -1,10 +1,11 @@
 package com.backend.backend.controlador;
 
+import com.backend.backend.controlador.respuestas.UsuarioPartProResp;
+import com.backend.backend.controlador.respuestas.UsuarioPropuResp;
 import com.backend.backend.controlador.respuestas.UsuarioResp;
 import com.backend.backend.servicios.UsuarioS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,16 @@ public class UsuarioC {
     @GetMapping
     private ResponseEntity<List<UsuarioResp>> listar() {
         return ResponseEntity.ok(usuarioS.listar());
+    }
+
+    @GetMapping("/participacion")
+    private ResponseEntity<List<UsuarioPartProResp>> listarParticipacionProyecto() {
+        return ResponseEntity.ok(usuarioS.listarParticipacionProyecto());
+    }
+
+    @GetMapping("/autor")
+    private ResponseEntity<List<UsuarioPropuResp>> listarPropuestas() {
+        return ResponseEntity.ok(usuarioS.listarPropuestas());
     }
 
 }

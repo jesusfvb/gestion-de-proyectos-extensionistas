@@ -18,7 +18,7 @@ public class PropuestaResp {
 
     private Propuesta.Estado estado;
 
-    private UsuarioResp coordinador;
+    private String coordinador;
 
     public PropuestaResp() {
     }
@@ -30,7 +30,7 @@ public class PropuestaResp {
         this.descripcion = propuesta.getDescription();
         this.fechaSolicitud = LocalDate.from(propuesta.getFechaSolicitud());
         this.estado = propuesta.getEstado();
-        this.coordinador = new UsuarioResp(propuesta.getCoordinador());
+        this.coordinador = propuesta.getCoordinador();
     }
 
     public Integer getId() {
@@ -57,7 +57,7 @@ public class PropuestaResp {
         return estado;
     }
 
-    public UsuarioResp getCoordinador() {
+    public String getCoordinador() {
         return coordinador;
     }
 }

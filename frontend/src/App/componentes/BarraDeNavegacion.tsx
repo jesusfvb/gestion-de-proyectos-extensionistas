@@ -12,17 +12,20 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useEffect, useRef, useState} from "react";
+import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useContext, useEffect, useRef, useState} from "react";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from "../img/logo.png";
 import {useLocation, useNavigate, Outlet} from "react-router-dom";
+import {DatosUser, IsRole} from "../App";
 
 export default function BarraDeNavegacion(props: { serrarSession: Function }): ReactElement {
     const menuId = 'primary-search-account-menu';
     const location = useLocation()
     const navegate = useNavigate()
     const cuenta = useRef<Element>()
+    const {isRolBoolean} = useContext(IsRole)
+    const datosUser = useContext(DatosUser)
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
     const [value, setValue] = useState<string>("/inicio");
 
@@ -62,13 +65,8 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                         <Grid item xl={7} lg={7} container direction="column">
                             <Grid container direction="column" justifyContent="center" alignItems="flex-end">
                                 <Box ref={cuenta}>
-                                    <IconButton aria-label="show 17 new notifications" color="inherit">
-                                        <Badge badgeContent={17} color="error">
-                                            <NotificationsIcon/>
-                                        </Badge>
-                                    </IconButton>
                                     <Typography variant={"overline"}
-                                                sx={{fontSize: 15, marginLeft: 3}}> dayanabb</Typography>
+                                                sx={{fontSize: 15, marginLeft: 3}}> {datosUser.usuario}</Typography>
                                     <IconButton
                                         size="large"
                                         edge="end"
@@ -91,14 +89,18 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                               horizontal: 'right'
                                           }}
                                     >
-                                       
+
                                         <MenuItem onClick={handleSerrarSession}>Cerrar Sesión</MenuItem>
                                     </Menu>
                                 </Box>
                             </Grid>
                             <Tabs value={value} onChange={handleChange} textColor="inherit">
                                 <Tab label="Inicio" value={"/inicio"}/>
-                                <Tab label="Proyectos" value={"/proyectos"}/>
+                                {
+                                    (isRolBoolean("Vicedecana")) ?
+                                        <Tab label="Listados    " value={"/listado"}/> :
+                                        <Tab label="Proyectos" value={"/proyectos"}/>
+                                }
                                 <Tab label="Propuestas" value={"/propuestas"}/>
                             </Tabs>
                         </Grid>

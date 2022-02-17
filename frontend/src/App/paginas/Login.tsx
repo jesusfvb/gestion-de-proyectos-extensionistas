@@ -16,23 +16,13 @@ import logo from '../img/logo.png'
 import axios from "axios";
 import {FormEvent, ReactElement} from "react";
 
-export default function Login(props: { setSession: Function }): ReactElement {
+export default function Login(props: { iniciarSession: Function }): ReactElement {
     const theme = createTheme()
 
-    const iniciarSession = (even: FormEvent): void => {
+    const iniciarSessionM = (even: FormEvent): void => {
         even.preventDefault()
         let inputs = even.currentTarget.getElementsByTagName("input")
-        axios
-            .post("/login", {
-                usuario: inputs.namedItem("usuario")?.value,
-                contrasenna: inputs.namedItem("contrasenna")?.value
-            })
-            .then(datos => {
-                let jwt: string = datos.data
-                localStorage.setItem("jwt", jwt)
-                props.setSession(jwt)
-            })
-            .catch(error => console.error(error))
+        props.iniciarSession(inputs[0].value, inputs[1].value)
     }
 
     function Copyright(props: any): ReactElement {
@@ -55,7 +45,7 @@ export default function Login(props: { setSession: Function }): ReactElement {
                         display: "flex", flexDirection: "column", alignItems: "center",
                     }}>
                         <img src={logo} width={350} alt="logo"/>
-                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={iniciarSession}>
+                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={iniciarSessionM}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <TextField fullWidth label="Usuario" variant="standard" id="usuario"/>

@@ -23,6 +23,12 @@ public class PropuestaC {
         return ResponseEntity.ok(propuestaS.listar());
     }
 
+
+    @GetMapping("/usuario/{usuario}")
+    private ResponseEntity<List<PropuestaResp>> listarPorUsuario(@PathVariable String usuario) {
+        return ResponseEntity.ok(propuestaS.listarPorUsuario(usuario));
+    }
+
     @PostMapping
     private ResponseEntity<PropuestaResp> add(@RequestBody PropuestaSo propuesta) {
         return ResponseEntity.ok(propuestaS.add(propuesta));
@@ -37,4 +43,15 @@ public class PropuestaC {
     private ResponseEntity<PropuestaResp> update(@RequestBody PropuestaUpSo propuesta) {
         return ResponseEntity.ok(propuestaS.update(propuesta));
     }
+
+    @PutMapping("/aceptar")
+    private ResponseEntity<List<PropuestaResp>> aceptar(@RequestBody Integer[] ids) {
+        return ResponseEntity.ok(propuestaS.aceptar(ids));
+    }
+
+    @PutMapping("/denegar")
+    private ResponseEntity<List<PropuestaResp>> denegar(@RequestBody Integer[] ids) {
+        return ResponseEntity.ok(propuestaS.denegar(ids));
+    }
+
 }

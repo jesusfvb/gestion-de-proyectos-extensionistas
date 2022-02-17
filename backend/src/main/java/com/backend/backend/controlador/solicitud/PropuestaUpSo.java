@@ -9,7 +9,7 @@ public class PropuestaUpSo {
 
     private String nombre;
 
-    private Integer idCoordinador;
+    private String coordinador;
 
     private String area;
 
@@ -22,8 +22,8 @@ public class PropuestaUpSo {
         return nombre;
     }
 
-    public Integer getIdCoordinador() {
-        return idCoordinador;
+    public String getCoordinador() {
+        return coordinador;
     }
 
     public String getArea() {

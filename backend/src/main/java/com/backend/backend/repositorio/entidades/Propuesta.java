@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Propuesta extends Entidad {
-    public enum Estado {PENDIENTE, APROBADO, DENEGADO}
+    public enum Estado {PENDIENTE, ACEPATADA, DENEGADA}
 
     @Column
     private String nombre;
@@ -19,24 +19,18 @@ public class Propuesta extends Entidad {
     @Column
     private LocalDateTime fechaSolicitud;
 
-    @Enumerated
+    @Column
+    private String coordinador;
+
+    @Enumerated(EnumType.STRING)
     @Column()
     private Estado estado;
 
     @ManyToOne
-    @JoinColumn(name = "coordinador_id")
-    private Usuario coordinador;
-
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
+    
     public Propuesta() {
-    }
-
-    public Propuesta(String nombre, String area, String description, Integer idCoordinador) {
-        this.nombre = nombre;
-        this.area = area;
-        this.description = description;
-        this.coordinador = new Usuario(idCoordinador);
-        this.fechaSolicitud = LocalDateTime.now();
-        this.estado = Estado.PENDIENTE;
     }
 
     public String getNombre() {
@@ -64,14 +58,6 @@ public class Propuesta extends Entidad {
         this.description = description;
     }
 
-    public Usuario getCoordinador() {
-        return coordinador;
-    }
-
-    public void setCoordinador(Usuario coordinador) {
-        this.coordinador = coordinador;
-    }
-
     public Estado getEstado() {
         return estado;
     }
@@ -88,4 +74,21 @@ public class Propuesta extends Entidad {
     public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
         this.fechaSolicitud = fechaSolicitud;
     }
+
+    public String getCoordinador() {
+        return coordinador;
+    }
+
+    public void setCoordinador(String coordinador) {
+        this.coordinador = coordinador;
+    }
+
+    public Usuario getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Usuario autor) {
+        this.autor = autor;
+    }
+
 }

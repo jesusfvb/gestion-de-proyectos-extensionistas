@@ -4,20 +4,26 @@ import com.backend.backend.controlador.respuestas.PropuestaResp;
 import com.backend.backend.controlador.solicitud.PropuestaSo;
 import com.backend.backend.controlador.solicitud.PropuestaUpSo;
 import com.backend.backend.repositorio.PropuestaR;
+import com.backend.backend.repositorio.UsuarioR;
 import com.backend.backend.repositorio.entidades.Propuesta;
 import com.backend.backend.repositorio.entidades.Usuario;
 import com.backend.backend.servicios.PropuestaS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PropuestasSI implements PropuestaS {
 
     @Autowired
     private PropuestaR propuestaR;
+
+    @Autowired
+    private UsuarioR usuarioR;
 
     @Override
     public List<PropuestaResp> listar() {
@@ -27,8 +33,39 @@ public class PropuestasSI implements PropuestaS {
     }
 
     @Override
+    public List<PropuestaResp> listarPorUsuario(String usuario) {
+        return propuestaR.findByAutor_Usuario(usuario).parallelStream().map(PropuestaResp::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PropuestaResp> aceptar(Integer[] ids) {
+        List<PropuestaResp> salida = new LinkedList<>();
+        Propuesta propuesta;
+        for (Integer id : ids) {
+            propuesta = propuestaR.getById(id);
+            propuesta.setEstado(Propuesta.Estado.ACEPATADA);
+            propuestaR.save(propuesta);
+            salida.add(new PropuestaResp(propuesta));
+        }
+        return salida;
+    }
+
+    @Override
+    public List<PropuestaResp> denegar(Integer[] ids) {
+        List<PropuestaResp> salida = new LinkedList<>();
+        Propuesta propuesta;
+        for (Integer id : ids) {
+            propuesta = propuestaR.getById(id);
+            propuesta.setEstado(Propuesta.Estado.DENEGADA);
+            propuestaR.save(propuesta);
+            salida.add(new PropuestaResp(propuesta));
+        }
+        return salida;
+    }
+
+    @Override
     public PropuestaResp add(PropuestaSo propuesta) {
-        return new PropuestaResp(propuestaR.save(propuesta.getPropuesta()));
+        return new PropuestaResp(propuestaR.save(propuesta.getPropuesta(usuarioR.findByUsuario(propuesta.getAutor()))));
     }
 
     @Override
@@ -45,7 +82,9 @@ public class PropuestasSI implements PropuestaS {
         oldPropuesta.setNombre(propuesta.getNombre());
         oldPropuesta.setArea(propuesta.getArea());
         oldPropuesta.setDescription(propuesta.getDescripcion());
-        oldPropuesta.setCoordinador(new Usuario(propuesta.getIdCoordinador()));
-        return new PropuestaResp(propuestaR.save(oldPropuesta));
+        oldPropuesta.setCoordinador(propuesta.getCoordinador());
+        oldPropuesta.setFechaSolicitud(LocalDateTime.now());
+        propuestaR.save(oldPropuesta);
+        return new PropuestaResp(oldPropuesta);
     }
 }

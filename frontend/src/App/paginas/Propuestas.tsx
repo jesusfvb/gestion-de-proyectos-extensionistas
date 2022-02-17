@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, MouseEvent, ReactElement, SyntheticEvent, useContext, useEffect, useState} from "react";
+import {ChangeEvent, FormEvent, MouseEvent, ReactElement, useContext, useEffect, useState} from "react";
 import {
     DataGrid,
     GridColumns,
@@ -9,11 +9,8 @@ import {
     MuiEvent
 } from "@mui/x-data-grid";
 import {
-    Autocomplete,
-    AutocompleteValue,
     Box,
     Button,
-    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -80,7 +77,7 @@ export default function Propuestas(): ReactElement {
     const [rows, setRows] = useState<Array<any>>([])
     const [open, setOpen] = useState<{ open: boolean, id: number | undefined }>({open: false, id: undefined});
     const [nombre, setNombre] = useState<string>("");
-    const [coordinador, setCoordinador] = useState<any>();
+    const [coordinador, setCoordinador] = useState<string>("");
     const [area, setArea] = useState<string>("");
     const [descripcion, setDescripcion] = useState<string>("");
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
@@ -117,6 +114,15 @@ export default function Propuestas(): ReactElement {
         }
         setDescripcion(event.target.value)
     }
+    const handleChangeCooarrdinador = (event: ChangeEvent<HTMLInputElement>) => {
+        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
+        if (event.target.value.length === 0) {
+            setValido({...valido, coordinador: true})
+        } else {
+            setValido({...valido, coordinador: reg.test(event.target.value)})
+        }
+        setCoordinador(event.target.value)
+    }
 
     const handleClickOpen = (id: number | undefined = undefined) => (evento: MouseEvent) => {
         evento.stopPropagation()
@@ -138,7 +144,7 @@ export default function Propuestas(): ReactElement {
     const handleClickClose = () => {
         setOpen({open: false, id: undefined});
         setNombre("")
-        setCoordinador(null)
+        setCoordinador("")
         setArea("")
         setDescripcion("")
         setValido({
@@ -162,7 +168,7 @@ export default function Propuestas(): ReactElement {
                     .put("/propuestas", {
                         id: open.id,
                         nombre: nombre,
-                        idCoordinador: coordinador?.id,
+                        coordinador: coordinador,
                         area: area,
                         descripcion: descripcion,
                     })
@@ -177,7 +183,7 @@ export default function Propuestas(): ReactElement {
                 axios
                     .post("/propuestas", {
                         nombre: nombre,
-                        idCoordinador: coordinador?.id,
+                        coordinador: coordinador,
                         area: area,
                         descripcion: descripcion,
                         autor: datoUser.usuario,
@@ -217,68 +223,6 @@ export default function Propuestas(): ReactElement {
                 </IconButton>
             </GridToolbarContainer>
         )
-    }
-
-    function MyAutocomplete(): ReactElement {
-        const [open, setOpen] = useState(false);
-        const [options, setOptions] = useState([]);
-        const loading = open && options.length === 0;
-
-        useEffect(() => {
-            if (loading) {
-                axios
-                    .get("/usuario")
-                    .then(response => {
-                        setOptions(response.data)
-                    })
-                    .catch(error => console.error(error))
-            }
-        }, [loading]);
-
-        const handleChange = (event: SyntheticEvent, newValue: AutocompleteValue<any, any, any, any>) => {
-            if (newValue !== null) {
-                setValido({...valido, coordinador: false})
-            } else {
-                setValido({...valido, coordinador: true})
-            }
-            setCoordinador(newValue)
-        }
-
-        return (
-            <Autocomplete
-                id="nombre"
-                sx={{width: "100%", paddingTop: 2}}
-                open={open}
-                value={coordinador}
-                onChange={handleChange}
-                onOpen={() => {
-                    setOpen(true);
-                }}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
-                getOptionLabel={(option: any) => option.nombre + ""}
-                options={options}
-                loading={loading}
-                renderInput={(params: any) => (
-                    <TextField
-                        {...params}
-                        label="Propuesta de coordinador"
-                        error={valido.coordinador}
-                        InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                                <>
-                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
-                                    {params.InputProps.endAdornment}
-                                </>
-                            ),
-                        }}
-                    />
-                )}
-            />
-        );
     }
 
     useEffect(() => {
@@ -323,7 +267,7 @@ export default function Propuestas(): ReactElement {
                                     Coordinador:
                                 </Typography>
                                 <Typography variant={"h5"}>
-                                    {selected?.coordinador.nombre}
+                                    {selected?.coordinador}
                                 </Typography>
                             </Grid>
                             <Grid item container direction="row" sx={{marginBottom: 1}}>
@@ -374,7 +318,18 @@ export default function Propuestas(): ReactElement {
                         onChange={handleChangeNombre}
                         error={valido.nombre}
                     />
-                    <MyAutocomplete/>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="coordinador"
+                        label="Coordinador"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={coordinador}
+                        onChange={handleChangeCooarrdinador}
+                        error={valido.coordinador}
+                    />
                     <FormControl fullWidth sx={{marginTop: 2}}>
                         <InputLabel id="area-label">Area</InputLabel>
                         <Select

@@ -1,6 +1,7 @@
 package com.backend.backend.controlador;
 
 import com.backend.backend.controlador.respuestas.ProyectoResp;
+import com.backend.backend.controlador.solicitud.ProyectoNewSol;
 import com.backend.backend.servicios.ProyectoS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,11 @@ public class ProyectoC {
     @Autowired
     private ProyectoS proyectoS;
 
+    @GetMapping()
+    private ResponseEntity<List<ProyectoResp>> listar() {
+        return ResponseEntity.ok(proyectoS.listar());
+    }
+
     @GetMapping("/actuales/usuario/{usuario}")
     private ResponseEntity<List<ProyectoResp>> getPorUsuarioActuales(@PathVariable String usuario) {
         return ResponseEntity.ok(proyectoS.listarPorUsuarioActuales(usuario));
@@ -29,6 +35,12 @@ public class ProyectoC {
     @GetMapping("/almacenado/usuario/{usuario}")
     private ResponseEntity<List<ProyectoResp>> getPorUsuarioAlmacenado(@PathVariable String usuario) {
         return ResponseEntity.ok(proyectoS.listarPorUsuarioAlmacenado(usuario));
+    }
+
+
+    @PostMapping
+    private ResponseEntity<ProyectoResp> save(@RequestBody ProyectoNewSol proyecto) {
+        return ResponseEntity.ok(proyectoS.save(proyecto));
     }
 
 }

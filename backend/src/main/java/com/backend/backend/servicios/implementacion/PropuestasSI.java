@@ -38,6 +38,32 @@ public class PropuestasSI implements PropuestaS {
     }
 
     @Override
+    public List<PropuestaResp> aceptar(Integer[] ids) {
+        List<PropuestaResp> salida = new LinkedList<>();
+        Propuesta propuesta;
+        for (Integer id : ids) {
+            propuesta = propuestaR.getById(id);
+            propuesta.setEstado(Propuesta.Estado.ACEPATADA);
+            propuestaR.save(propuesta);
+            salida.add(new PropuestaResp(propuesta));
+        }
+        return salida;
+    }
+
+    @Override
+    public List<PropuestaResp> denegar(Integer[] ids) {
+        List<PropuestaResp> salida = new LinkedList<>();
+        Propuesta propuesta;
+        for (Integer id : ids) {
+            propuesta = propuestaR.getById(id);
+            propuesta.setEstado(Propuesta.Estado.DENEGADA);
+            propuestaR.save(propuesta);
+            salida.add(new PropuestaResp(propuesta));
+        }
+        return salida;
+    }
+
+    @Override
     public PropuestaResp add(PropuestaSo propuesta) {
         return new PropuestaResp(propuestaR.save(propuesta.getPropuesta(usuarioR.findByUsuario(propuesta.getAutor()))));
     }
@@ -56,7 +82,7 @@ public class PropuestasSI implements PropuestaS {
         oldPropuesta.setNombre(propuesta.getNombre());
         oldPropuesta.setArea(propuesta.getArea());
         oldPropuesta.setDescription(propuesta.getDescripcion());
-        oldPropuesta.setCoordinador(new Usuario(propuesta.getIdCoordinador()));
+        oldPropuesta.setCoordinador(propuesta.getCoordinador());
         oldPropuesta.setFechaSolicitud(LocalDateTime.now());
         propuestaR.save(oldPropuesta);
         return new PropuestaResp(oldPropuesta);

@@ -23,17 +23,16 @@ import {
     IconButton,
     InputLabel,
     MenuItem,
-    Paper,
     Select,
     SelectChangeEvent,
     TextField,
     Typography
 } from "@mui/material";
-import {Add, Delete, Description, LocationOn, Person, Update} from "@mui/icons-material";
+import {Add, CheckCircle, Delete, Description, HighlightOff, LocationOn, Person, Update} from "@mui/icons-material";
 import axios from "axios";
 import {DatosUser} from "../../App";
 
-export default function PropuestasVisedecana(): ReactElement {
+export default function PropuestasVicedecana(): ReactElement {
     const datoUser = useContext(DatosUser)
     const columns: GridColumns = [
         {
@@ -65,9 +64,15 @@ export default function PropuestasVisedecana(): ReactElement {
             field: "id",
             filterable: false,
             headerName: "Acción",
-            minWidth: 130,
+            minWidth: 200,
             renderCell: (param) => (
                 <>
+                    <IconButton color={"success"} onClick={aceptar(param.value)}>
+                        <CheckCircle/>
+                    </IconButton>
+                    <IconButton color={"error"} onClick={denegar(param.value)}>
+                        <HighlightOff/>
+                    </IconButton>
                     <IconButton color={"primary"} onClick={handleClickOpen(param.value)}>
                         <Update/>
                     </IconButton>
@@ -80,7 +85,7 @@ export default function PropuestasVisedecana(): ReactElement {
     const [rows, setRows] = useState<Array<any>>([])
     const [open, setOpen] = useState<{ open: boolean, id: number | undefined }>({open: false, id: undefined});
     const [nombre, setNombre] = useState<string>("");
-    const [coordinador, setCoordinador] = useState<any>();
+    const [coordinador, setCoordinador] = useState<string>("");
     const [area, setArea] = useState<string>("");
     const [descripcion, setDescripcion] = useState<string>("");
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
@@ -91,6 +96,7 @@ export default function PropuestasVisedecana(): ReactElement {
         descripcion: true
     })
     const [selected, setSelected] = useState<any>()
+    const [openVer, setOpenVer] = useState<boolean>(false)
 
     const handleChangeNombre = (event: ChangeEvent<HTMLInputElement>) => {
         let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
@@ -117,6 +123,15 @@ export default function PropuestasVisedecana(): ReactElement {
         }
         setDescripcion(event.target.value)
     }
+    const handleChangeCooarrdinador = (event: ChangeEvent<HTMLInputElement>) => {
+        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
+        if (event.target.value.length === 0) {
+            setValido({...valido, coordinador: true})
+        } else {
+            setValido({...valido, coordinador: reg.test(event.target.value)})
+        }
+        setCoordinador(event.target.value)
+    }
 
     const handleClickOpen = (id: number | undefined = undefined) => (evento: MouseEvent) => {
         evento.stopPropagation()
@@ -135,10 +150,13 @@ export default function PropuestasVisedecana(): ReactElement {
         }
         setOpen({open: true, id: id});
     };
+    const handleClickOpenVer = () => {
+        setOpenVer(true);
+    };
     const handleClickClose = () => {
         setOpen({open: false, id: undefined});
         setNombre("")
-        setCoordinador(null)
+        setCoordinador("")
         setArea("")
         setDescripcion("")
         setValido({
@@ -148,10 +166,14 @@ export default function PropuestasVisedecana(): ReactElement {
             descripcion: true
         })
     };
+    const handleClickCloseVer = () => {
+        setOpenVer(false)
+    };
 
     const handleClickRow = (params: GridRowParams, event: MuiEvent<MouseEvent<HTMLElement>>) => {
         event.preventDefault()
         setSelected(rows.find(value => value.id === params.id))
+        handleClickOpenVer()
     }
 
     const save = (evnt: FormEvent) => {
@@ -162,7 +184,7 @@ export default function PropuestasVisedecana(): ReactElement {
                     .put("/propuestas", {
                         id: open.id,
                         nombre: nombre,
-                        idCoordinador: coordinador?.id,
+                        coordinador: coordinador,
                         area: area,
                         descripcion: descripcion,
                     })
@@ -177,7 +199,7 @@ export default function PropuestasVisedecana(): ReactElement {
                 axios
                     .post("/propuestas", {
                         nombre: nombre,
-                        idCoordinador: coordinador?.id,
+                        coordinador: coordinador,
                         area: area,
                         descripcion: descripcion,
                         autor: datoUser.usuario,
@@ -204,10 +226,62 @@ export default function PropuestasVisedecana(): ReactElement {
             .catch(error => console.error(error))
     }
 
-    function MyToolbar(): ReactElement {
+    const aceptar = (id: number | undefined = undefined) => (event: MouseEvent) => {
+        event.stopPropagation()
+        axios
+            .put("/propuestas/aceptar", (id === undefined) ? selectionModel : [id])
+            .then(response => {
+                let newRow = [...rows]
+                response.data.forEach((d: any) => {
+                    newRow.splice(newRow.findIndex((row: any) => row.id === d.id), 1, d)
+                })
+                setRows(newRow)
+            })
+            .catch(error => console.error(error))
+    }
+    const denegar = (id: number | undefined = undefined) => (event: MouseEvent) => {
+        event.stopPropagation()
+        axios
+            .put("/propuestas/denegar", (id === undefined) ? selectionModel : [id])
+            .then(response => {
+                let newRow = [...rows]
+                response.data.forEach((d: any) => {
+                    newRow.splice(newRow.findIndex((row: any) => row.id === d.id), 1, d)
+                })
+                setRows(newRow)
+            })
+            .catch(error => console.error(error))
+    }
+
+    function MyToolbarPropuestas(): ReactElement {
         return (
             <GridToolbarContainer>
                 <GridToolbarFilterButton/>
+                <Box sx={{flexGrow: 1}}/>
+                <Typography>Propuestas</Typography>
+                <Box sx={{flexGrow: 1}}/>
+                <IconButton color={"success"} disabled={selectionModel.length === 0} onClick={aceptar()}>
+                    <CheckCircle/>
+                </IconButton>
+                <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={denegar()}>
+                    <HighlightOff/>
+                </IconButton>
+                <IconButton color={"success"} onClick={handleClickOpen()}>
+                    <Add/>
+                </IconButton>
+                <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={borrar()}>
+                    <Delete/>
+                </IconButton>
+            </GridToolbarContainer>
+        )
+    }
+
+    function MyToolbarRegistros(): ReactElement {
+        return (
+            <GridToolbarContainer>
+                <GridToolbarFilterButton/>
+                <Box sx={{flexGrow: 1}}/>
+                <Typography>Criterios</Typography>
                 <Box sx={{flexGrow: 1}}/>
                 <IconButton color={"success"} onClick={handleClickOpen()}>
                     <Add/>
@@ -219,71 +293,9 @@ export default function PropuestasVisedecana(): ReactElement {
         )
     }
 
-    function MyAutocomplete(): ReactElement {
-        const [open, setOpen] = useState(false);
-        const [options, setOptions] = useState([]);
-        const loading = open && options.length === 0;
-
-        useEffect(() => {
-            if (loading) {
-                axios
-                    .get("/usuario")
-                    .then(response => {
-                        setOptions(response.data)
-                    })
-                    .catch(error => console.error(error))
-            }
-        }, [loading]);
-
-        const handleChange = (event: SyntheticEvent, newValue: AutocompleteValue<any, any, any, any>) => {
-            if (newValue !== null) {
-                setValido({...valido, coordinador: false})
-            } else {
-                setValido({...valido, coordinador: true})
-            }
-            setCoordinador(newValue)
-        }
-
-        return (
-            <Autocomplete
-                id="nombre"
-                sx={{width: "100%", paddingTop: 2}}
-                open={open}
-                value={coordinador}
-                onChange={handleChange}
-                onOpen={() => {
-                    setOpen(true);
-                }}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
-                getOptionLabel={(option: any) => option.nombre + ""}
-                options={options}
-                loading={loading}
-                renderInput={(params: any) => (
-                    <TextField
-                        {...params}
-                        label="Propuesta de coordinador"
-                        error={valido.coordinador}
-                        InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                                <>
-                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
-                                    {params.InputProps.endAdornment}
-                                </>
-                            ),
-                        }}
-                    />
-                )}
-            />
-        );
-    }
-
     useEffect(() => {
         axios
-            .get("/propuestas/usuario/" + datoUser.usuario)
+            .get("/propuestas")
             .then(response => {
                 setRows(response.data)
                 setSelected(response.data[0])
@@ -292,9 +304,10 @@ export default function PropuestasVisedecana(): ReactElement {
     }, [])
     return (
         <div>
-            <Grid container>
+            <Grid container spacing={1}>
                 <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
-                    <DataGrid autoPageSize={true} columns={columns} rows={rows} components={{Toolbar: MyToolbar,}}
+                    <DataGrid autoPageSize={true} columns={columns} rows={rows}
+                              components={{Toolbar: MyToolbarPropuestas,}}
                               checkboxSelection
                               onSelectionModelChange={(newSelectionModel) => {
                                   setSelectionModel(newSelectionModel);
@@ -303,60 +316,16 @@ export default function PropuestasVisedecana(): ReactElement {
                               disableSelectionOnClick={true}
                               selectionModel={selectionModel}/>
                 </Grid>
-                <Grid item xl={3} lg={3} md={2} sm={2} xs={2}>
-                    <Paper>
-                        <Grid
-                            container
-                            direction="column"
-                            justifyContent="left"
-                            alignItems="flex-start"
-                        >
-                            <Typography sx={{marginLeft: 2, marginBottom: 2, marginTop: 1}} variant={"h4"}>
-                                {selected?.nombre}
-                            </Typography>
-                            <Typography sx={{marginLeft: 2, marginBottom: 1,}} variant={"subtitle1"}>
-                                Información
-                            </Typography>
-                            <Grid item container direction="row" sx={{marginBottom: 1}}>
-                                <Person sx={{marginLeft: 2, marginRight: 1}}/>
-                                <Typography variant={"h6"} sx={{marginRight: 1}}>
-                                    Coordinador:
-                                </Typography>
-                                <Typography variant={"h5"}>
-                                    {selected?.coordinador.nombre}
-                                </Typography>
-                            </Grid>
-                            <Grid item container direction="row" sx={{marginBottom: 1}}>
-                                <LocationOn sx={{marginLeft: 2, marginRight: 1}}/>
-                                <Typography variant={"h6"} sx={{marginRight: 1}}>
-                                    Area:
-                                </Typography>
-                                <Typography variant={"h5"}>
-                                    {selected?.area}
-                                </Typography>
-                            </Grid>
-                            <Grid item container direction="column">
-                                <Grid item container direction="row" sx={{marginBottom: 1}}>
-                                    <Description sx={{marginLeft: 2, marginRight: 1}}/>
-                                    <Typography variant={"h6"} sx={{marginRight: 1}}>
-                                        Descripción:
-                                    </Typography>
-                                </Grid>
-                                <TextField
-                                    id="outlined-multiline-static"
-                                    multiline
-                                    rows={12}
-                                    defaultValue="Default Value"
-                                    value={selected?.descripcion}
-                                    sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
-                                    onChange={(event) => {
-                                        event.stopPropagation()
-                                        event.target.value = selected?.descripcion
-                                    }}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Paper>
+                <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+                    <DataGrid autoPageSize={true} columns={columns} rows={rows}
+                              components={{Toolbar: MyToolbarRegistros,}}
+                              checkboxSelection
+                              onSelectionModelChange={(newSelectionModel) => {
+                                  setSelectionModel(newSelectionModel);
+                              }}
+                              onRowClick={handleClickRow}
+                              disableSelectionOnClick={true}
+                              selectionModel={selectionModel}/>
                 </Grid>
             </Grid>
             <Dialog open={open.open} onClose={handleClickClose}>
@@ -374,7 +343,18 @@ export default function PropuestasVisedecana(): ReactElement {
                         onChange={handleChangeNombre}
                         error={valido.nombre}
                     />
-                    <MyAutocomplete/>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="coordinador"
+                        label="Coordinador"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={coordinador}
+                        onChange={handleChangeCooarrdinador}
+                        error={valido.coordinador}
+                    />
                     <FormControl fullWidth sx={{marginTop: 2}}>
                         <InputLabel id="area-label">Area</InputLabel>
                         <Select
@@ -424,7 +404,65 @@ export default function PropuestasVisedecana(): ReactElement {
                     <Button onClick={save}>Aceptar</Button>
                 </DialogActions>
             </Dialog>
-            gagsdagsd
+            <Dialog open={openVer} onClose={handleClickCloseVer}>
+                <DialogTitle>Propuesta</DialogTitle>
+                <DialogContent sx={{width: 450}}>
+                    <Grid
+                        container
+                        direction="column"
+                        justifyContent="left"
+                        alignItems="flex-start"
+                    >
+                        <Typography sx={{marginLeft: 2, marginBottom: 2, marginTop: 1}} variant={"h4"}>
+                            {selected?.nombre}
+                        </Typography>
+                        <Typography sx={{marginLeft: 2, marginBottom: 1,}} variant={"subtitle1"}>
+                            Información
+                        </Typography>
+                        <Grid item container direction="row" sx={{marginBottom: 1}}>
+                            <Person sx={{marginLeft: 2, marginRight: 1}}/>
+                            <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                Coordinador:
+                            </Typography>
+                            <Typography variant={"h5"}>
+                                {selected?.coordinador}
+                            </Typography>
+                        </Grid>
+                        <Grid item container direction="row" sx={{marginBottom: 1}}>
+                            <LocationOn sx={{marginLeft: 2, marginRight: 1}}/>
+                            <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                Area:
+                            </Typography>
+                            <Typography variant={"h5"}>
+                                {selected?.area}
+                            </Typography>
+                        </Grid>
+                        <Grid item container direction="column">
+                            <Grid item container direction="row" sx={{marginBottom: 1}}>
+                                <Description sx={{marginLeft: 2, marginRight: 1}}/>
+                                <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                    Descripción:
+                                </Typography>
+                            </Grid>
+                            <TextField
+                                id="outlined-multiline-static"
+                                multiline
+                                rows={10}
+                                defaultValue="Default Value"
+                                value={selected?.descripcion}
+                                sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
+                                onChange={(event) => {
+                                    event.stopPropagation()
+                                    event.target.value = selected?.descripcion
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickClose}>Salir</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

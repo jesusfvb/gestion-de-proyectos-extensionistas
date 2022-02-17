@@ -8,11 +8,17 @@ public class ProyectoResp {
 
     private String nombre;
 
+    private String coordinador;
+
+    private String description;
+
     private String estado;
 
     public ProyectoResp(Proyecto proyecto) {
         this.id = proyecto.getId();
         this.nombre = proyecto.getNombre();
+        this.coordinador = proyecto.getCoordinador();
+        this.description = proyecto.getDescription();
         this.estado = proyecto.getEstado().name();
     }
 
@@ -24,7 +30,15 @@ public class ProyectoResp {
         return nombre;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getEstado() {
         return estado;
+    }
+
+    public String getCoordinador() {
+        return coordinador;
     }
 }

@@ -14,6 +14,10 @@ public interface PropuestaS {
 
     List<PropuestaResp> listarPorUsuario(String usuario);
 
+    List<PropuestaResp> aceptar(Integer[] ids);
+
+    List<PropuestaResp> denegar(Integer[] ids);
+
     PropuestaResp add(PropuestaSo propuesta);
 
     PropuestaResp update(PropuestaUpSo propuesta);

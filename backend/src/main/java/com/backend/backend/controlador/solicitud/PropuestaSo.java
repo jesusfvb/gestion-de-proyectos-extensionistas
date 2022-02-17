@@ -10,7 +10,7 @@ public class PropuestaSo {
 
     private String nombre;
 
-    private Integer idCoordinador;
+    private  String coordinador;
 
     private String area;
 
@@ -25,8 +25,8 @@ public class PropuestaSo {
         return nombre;
     }
 
-    public Integer getIdCoordinador() {
-        return idCoordinador;
+    public String getCoordinador() {
+        return coordinador;
     }
 
     public String getArea() {
@@ -45,7 +45,7 @@ public class PropuestaSo {
     public Propuesta getPropuesta(Usuario usuario) {
         Propuesta propuesta = new Propuesta();
         propuesta.setNombre(this.nombre);
-        propuesta.setCoordinador(new Usuario(this.idCoordinador));
+        propuesta.setCoordinador(this.coordinador);
         propuesta.setArea(this.area);
         propuesta.setDescription(this.descripcion);
         propuesta.setFechaSolicitud(LocalDateTime.now());

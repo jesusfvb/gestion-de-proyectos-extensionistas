@@ -17,13 +17,14 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from "../img/logo.png";
 import {useLocation, useNavigate, Outlet} from "react-router-dom";
-import {DatosUser} from "../App";
+import {DatosUser, IsRole} from "../App";
 
 export default function BarraDeNavegacion(props: { serrarSession: Function }): ReactElement {
     const menuId = 'primary-search-account-menu';
     const location = useLocation()
     const navegate = useNavigate()
     const cuenta = useRef<Element>()
+    const {isRolBoolean} = useContext(IsRole)
     const datosUser = useContext(DatosUser)
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
     const [value, setValue] = useState<string>("/inicio");
@@ -95,7 +96,11 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                             </Grid>
                             <Tabs value={value} onChange={handleChange} textColor="inherit">
                                 <Tab label="Inicio" value={"/inicio"}/>
-                                <Tab label="Proyectos" value={"/proyectos"}/>
+                                {
+                                    (isRolBoolean("Vicedecana")) ?
+                                        <Tab label="Listados    " value={"/listado"}/> :
+                                        <Tab label="Proyectos" value={"/proyectos"}/>
+                                }
                                 <Tab label="Propuestas" value={"/propuestas"}/>
                             </Tabs>
                         </Grid>

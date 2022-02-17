@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Propuesta extends Entidad {
-    public enum Estado {PENDIENTE, APROBADO, DENEGADO}
+    public enum Estado {PENDIENTE, ACEPATADA, DENEGADA}
 
     @Column
     private String nombre;
@@ -19,18 +19,17 @@ public class Propuesta extends Entidad {
     @Column
     private LocalDateTime fechaSolicitud;
 
+    @Column
+    private String coordinador;
+
     @Enumerated(EnumType.STRING)
     @Column()
     private Estado estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coordinador_id")
-    private Usuario coordinador;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "autor_id")
     private Usuario autor;
-
+    
     public Propuesta() {
     }
 
@@ -59,14 +58,6 @@ public class Propuesta extends Entidad {
         this.description = description;
     }
 
-    public Usuario getCoordinador() {
-        return coordinador;
-    }
-
-    public void setCoordinador(Usuario coordinador) {
-        this.coordinador = coordinador;
-    }
-
     public Estado getEstado() {
         return estado;
     }
@@ -84,6 +75,14 @@ public class Propuesta extends Entidad {
         this.fechaSolicitud = fechaSolicitud;
     }
 
+    public String getCoordinador() {
+        return coordinador;
+    }
+
+    public void setCoordinador(String coordinador) {
+        this.coordinador = coordinador;
+    }
+
     public Usuario getAutor() {
         return autor;
     }
@@ -91,4 +90,5 @@ public class Propuesta extends Entidad {
     public void setAutor(Usuario autor) {
         this.autor = autor;
     }
+
 }

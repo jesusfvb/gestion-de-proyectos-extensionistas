@@ -11,6 +11,7 @@ import com.backend.backend.servicios.PropuestaS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +57,8 @@ public class PropuestasSI implements PropuestaS {
         oldPropuesta.setArea(propuesta.getArea());
         oldPropuesta.setDescription(propuesta.getDescripcion());
         oldPropuesta.setCoordinador(new Usuario(propuesta.getIdCoordinador()));
-        return new PropuestaResp(propuestaR.save(oldPropuesta));
+        oldPropuesta.setFechaSolicitud(LocalDateTime.now());
+        propuestaR.save(oldPropuesta);
+        return new PropuestaResp(oldPropuesta);
     }
 }

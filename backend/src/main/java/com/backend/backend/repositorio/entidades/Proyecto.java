@@ -22,6 +22,10 @@ public class Proyecto extends Entidad {
     @JoinColumn(name = "proyecto_id")
     private List<Usuario> participantes = new ArrayList<>();
 
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "proyecto_id")
+    private List<Usuario> alamacenados = new ArrayList<>();
+
     public Proyecto() {
     }
 
@@ -41,12 +45,19 @@ public class Proyecto extends Entidad {
         this.estado = estado;
     }
 
-
     public List<Usuario> getParticipantes() {
         return participantes;
     }
 
     public void setParticipantes(List<Usuario> participantes) {
         this.participantes = participantes;
+    }
+
+    public List<Usuario> getAlamacenados() {
+        return alamacenados;
+    }
+
+    public void setAlamacenados(List<Usuario> alamacenados) {
+        this.alamacenados = alamacenados;
     }
 }

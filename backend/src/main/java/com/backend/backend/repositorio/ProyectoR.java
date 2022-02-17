@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface ProyectoR extends JpaRepository<Proyecto, Integer> {
 
-    List<Proyecto> findByParticipantes_Usuario(String usuario);
+    List<Proyecto> findByParticipantes_UsuarioAndEstado(String usuario, Proyecto.Estado estado);
+
+    List<Proyecto> findByAlamacenados_Usuario(String usuario);
 
 }

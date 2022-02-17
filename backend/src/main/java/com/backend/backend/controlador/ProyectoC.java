@@ -16,9 +16,19 @@ public class ProyectoC {
     @Autowired
     private ProyectoS proyectoS;
 
-    @GetMapping("/usuario/{usuario}")
-    private ResponseEntity<List<ProyectoResp>> getPorUsuario(@PathVariable String usuario) {
-        return ResponseEntity.ok(proyectoS.listarPorUsuario(usuario));
+    @GetMapping("/actuales/usuario/{usuario}")
+    private ResponseEntity<List<ProyectoResp>> getPorUsuarioActuales(@PathVariable String usuario) {
+        return ResponseEntity.ok(proyectoS.listarPorUsuarioActuales(usuario));
+    }
+
+    @GetMapping("/culminados/usuario/{usuario}")
+    private ResponseEntity<List<ProyectoResp>> getPorUsuarioCulminados(@PathVariable String usuario) {
+        return ResponseEntity.ok(proyectoS.listarPorUsuarioCulminados(usuario));
+    }
+
+    @GetMapping("/almacenado/usuario/{usuario}")
+    private ResponseEntity<List<ProyectoResp>> getPorUsuarioAlmacenado(@PathVariable String usuario) {
+        return ResponseEntity.ok(proyectoS.listarPorUsuarioAlmacenado(usuario));
     }
 
 }

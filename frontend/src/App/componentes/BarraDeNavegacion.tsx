@@ -64,11 +64,6 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                         <Grid item xl={7} lg={7} container direction="column">
                             <Grid container direction="column" justifyContent="center" alignItems="flex-end">
                                 <Box ref={cuenta}>
-                                    <IconButton aria-label="show 17 new notifications" color="inherit">
-                                        <Badge badgeContent={17} color="error">
-                                            <NotificationsIcon/>
-                                        </Badge>
-                                    </IconButton>
                                     <Typography variant={"overline"}
                                                 sx={{fontSize: 15, marginLeft: 3}}> {datosUser.usuario}</Typography>
                                     <IconButton

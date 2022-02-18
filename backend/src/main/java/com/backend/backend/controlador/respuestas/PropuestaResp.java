@@ -20,8 +20,7 @@ public class PropuestaResp {
 
     private String coordinador;
 
-    public PropuestaResp() {
-    }
+    private String usuario;
 
     public PropuestaResp(Propuesta propuesta) {
         this.id = propuesta.getId();
@@ -31,6 +30,7 @@ public class PropuestaResp {
         this.fechaSolicitud = LocalDate.from(propuesta.getFechaSolicitud());
         this.estado = propuesta.getEstado();
         this.coordinador = propuesta.getCoordinador();
+        this.usuario = propuesta.getAutor().getUsuario();
     }
 
     public Integer getId() {
@@ -59,5 +59,9 @@ public class PropuestaResp {
 
     public String getCoordinador() {
         return coordinador;
+    }
+
+    public String getUsuario() {
+        return usuario;
     }
 }

@@ -30,6 +30,13 @@ public class BackendApplication implements CommandLineRunner {
 
             usuario = new Usuario();
             usuario.setContrasenna("1234");
+            usuario.setNombre("Roylan");
+            usuario.setUsuario("roylan");
+            usuario.setRol(Usuario.Rol.Usuario);
+            usuarioR.save(usuario);
+
+            usuario = new Usuario();
+            usuario.setContrasenna("1234");
             usuario.setNombre("Vicedecana");
             usuario.setUsuario("vicedecana");
             usuario.setRol(Usuario.Rol.Vicedecana);

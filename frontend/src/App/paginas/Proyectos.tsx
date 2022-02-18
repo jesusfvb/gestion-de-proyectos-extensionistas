@@ -32,14 +32,7 @@ export default function Proyectos(): ReactElement {
             headerAlign: "left",
             align: "left"
         },
-        {
-            field: "fechaSolicitud",
-            flex: 1,
-            type: "date",
-            headerName: "Fecha",
-            headerAlign: "left",
-            align: "left"
-        },
+
         {
             field: "estado",
             flex: 1,
@@ -65,10 +58,10 @@ export default function Proyectos(): ReactElement {
     const datoUser = useContext(DatosUser)
     const [rows, setRows] = useState<Array<any>>([])
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
-    const [option, setOption] = useState<1 | 2 | 3>(1)
+    const [option, setOption] = useState<1 | 2>(1)
     const [selected, setSelected] = useState<any>()
 
-    const handleChangeOption = (option: 1 | 2 | 3) => (event: MouseEvent) => {
+    const handleChangeOption = (option: 1 | 2) => (event: MouseEvent) => {
         setOption(option)
     }
     const handleClickRow = (params: GridRowParams, event: MuiEvent<MouseEvent<HTMLElement>>) => {
@@ -79,17 +72,19 @@ export default function Proyectos(): ReactElement {
     const borrar = (id: number | undefined = undefined) => (event: MouseEvent) => {
         event.stopPropagation()
         axios
-            .delete("/propuestas", {data: (id === undefined) ? selectionModel : [id]})
+            .delete("/proyecto/quitar/" + ((option === 1) ? "inscripcion" : "almacen"), {
+                data: {
+                    id: id,
+                    usuario: datoUser.usuario
+                }
+            })
             .then(response => {
                 let newRow = [...rows]
-                response.data.forEach((id: number) => {
-                    newRow.splice(newRow.findIndex((row: any) => row.id === id), 1)
-                })
+                newRow.splice(newRow.findIndex((row: any) => row.id === response.data), 1)
                 setRows(newRow)
             })
             .catch(error => console.error(error))
     }
-
 
     function MyToolbar(): ReactElement {
         return (
@@ -100,9 +95,6 @@ export default function Proyectos(): ReactElement {
                         Actuales
                     </Button>
                     <Button variant={(option === 2) ? "contained" : "outlined"} onClick={handleChangeOption(2)}>
-                        Culminados
-                    </Button>
-                    <Button variant={(option === 3) ? "contained" : "outlined"} onClick={handleChangeOption(3)}>
                         Almacenados
                     </Button>
                 </ButtonGroup>
@@ -115,24 +107,20 @@ export default function Proyectos(): ReactElement {
     }
 
     useEffect(() => {
-            let url = ""
-            switch (option) {
-                case 1:
-                    url = "/proyecto/actuales/usuario/" + datoUser.usuario
-                    break
-                case 2:
-                    url = "/proyecto/culminados/usuario/" + datoUser.usuario
-                    break
-                case 3:
-                    url = "/proyecto/almacenado/usuario/" + datoUser.usuario
-                    break
-            }
-            axios
-                .get(url)
-                .then(response => setRows(response.data))
-                .catch(error => console.error(error))
+        let url = ""
+        switch (option) {
+            case 1:
+                url = "/proyecto/actuales/usuario/" + datoUser.usuario
+                break
+            case 2:
+                url = "/proyecto/almacenado/usuario/" + datoUser.usuario
+                break
         }
-        , [option])
+        axios
+            .get(url)
+            .then(response => setRows(response.data))
+            .catch(error => console.error(error))
+    }, [option])
     return (
         <Grid container>
             <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
@@ -165,7 +153,7 @@ export default function Proyectos(): ReactElement {
                                 Coordinador:
                             </Typography>
                             <Typography variant={"h5"}>
-                                {selected?.coordinador.nombre}
+                                {selected?.coordinador}
                             </Typography>
                         </Grid>
                         <Grid item container direction="column">
@@ -179,12 +167,11 @@ export default function Proyectos(): ReactElement {
                                 id="outlined-multiline-static"
                                 multiline
                                 rows={12}
-                                defaultValue="Default Value"
-                                value={selected?.descripcion}
+                                value={selected?.description}
                                 sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
                                 onChange={(event) => {
                                     event.stopPropagation()
-                                    event.target.value = selected?.descripcion
+                                    event.target.value = selected?.description
                                 }}
                             />
                         </Grid>

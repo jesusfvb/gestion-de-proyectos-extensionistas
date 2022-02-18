@@ -55,6 +55,28 @@ export default function Listado(): ReactElement {
         setSelected(rows.find(value => value.id === params.id))
     }
 
+    const getList = (option: number): Array<ReactElement> => {
+        let salida: Array<ReactElement> = []
+        if (selected !== undefined && selected !== null) {
+            let pivote = selected?.[(option === 1) ? "proyectos" : "propuestas"]
+            if (typeof pivote === "object")
+                selected?.[(option === 1) ? "proyectos" : "propuestas"].forEach((data: any) => {
+                        salida.push(
+                            <TableRow
+                                key={data.id}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {data.nombre}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    }
+                )
+        }
+        return salida;
+    }
+
     function MyToolbar(): ReactElement {
         return (
             <GridToolbarContainer>
@@ -88,6 +110,7 @@ export default function Listado(): ReactElement {
                 .catch(error => console.error(error))
         }
         , [option])
+
     return (
         <Grid container>
             <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
@@ -104,16 +127,9 @@ export default function Listado(): ReactElement {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {selected?.propuestas.map((row: any) => (
-                                <TableRow
-                                    key={row.id}
-                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {row.nombre}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {
+                                getList(option)
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>

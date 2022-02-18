@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Propuesta extends Entidad {
-    public enum Estado {PENDIENTE, ACEPATADA, DENEGADA}
+    public enum Estado {PENDIENTE, ACEPTADA, DENEGADA}
 
     @Column
     private String nombre;
@@ -29,7 +29,7 @@ public class Propuesta extends Entidad {
     @ManyToOne
     @JoinColumn(name = "autor_id")
     private Usuario autor;
-    
+
     public Propuesta() {
     }
 

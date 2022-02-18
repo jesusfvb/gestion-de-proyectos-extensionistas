@@ -43,7 +43,7 @@ public class PropuestasSI implements PropuestaS {
         Propuesta propuesta;
         for (Integer id : ids) {
             propuesta = propuestaR.getById(id);
-            propuesta.setEstado(Propuesta.Estado.ACEPATADA);
+            propuesta.setEstado(Propuesta.Estado.ACEPTADA);
             propuestaR.save(propuesta);
             salida.add(new PropuestaResp(propuesta));
         }

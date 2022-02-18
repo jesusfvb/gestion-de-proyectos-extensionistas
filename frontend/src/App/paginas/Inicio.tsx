@@ -25,11 +25,12 @@ import document1 from '../documentos/formato para inscribir.pdf'
 import document2 from '../documentos/Manualde procedimientos.pdf'
 import document3 from '../documentos/Procedimiento proyectos.pdf'
 import {Add} from "@mui/icons-material";
-import {IsRole} from "../App";
+import {DatosUser, IsRole} from "../App";
 import axios from "axios";
 
 export default function Inicio(): ReactElement {
     const {isRolRender} = useContext(IsRole)
+    const datoUser = useContext(DatosUser)
     const [row, setRow] = useState<Array<any>>([])
     const [open, setOpen] = useState<{ open: boolean, id: number }>({open: false, id: -1});
     const [openAdd, setOpenAdd] = useState<{ open: boolean, id: number | undefined }>({open: false, id: undefined});
@@ -52,6 +53,14 @@ export default function Inicio(): ReactElement {
         setOpen({open: false, id: -1});
     };
     const handleCloseAdd = () => {
+        setValido({
+            nombre: true,
+            coordinador: true,
+            descripcion: true
+        })
+        setNombre("")
+        setCoordinador("")
+        setDescripcion("")
         setOpenAdd({open: false, id: undefined});
     };
 
@@ -93,6 +102,57 @@ export default function Inicio(): ReactElement {
                 handleCloseAdd()
             })
             .catch(error => console.error(error))
+    }
+    const borrar = () => {
+        axios
+            .delete("/proyecto/" + open.id)
+            .then(response => {
+                let newRow = [...row]
+                newRow.splice(newRow.findIndex((ro: any) => ro.id === response.data), 1)
+                setRow(newRow)
+                handleClose()
+            })
+            .catch(error => console.error(error))
+    }
+
+    const inscribirse = () => {
+        axios
+            .put('proyecto/inscribirse', {
+                id: open.id,
+                usuario: datoUser.usuario
+            })
+            .then(response => {
+                getData()
+                handleClose()
+            })
+            .catch(error => console.error(error))
+    }
+    const isInscrito = (id: number): boolean => {
+        if (id !== -1) {
+            let r = row.find(row => row.id === id)
+            return r.inscritos.some((inscritos: string) => inscritos === datoUser.usuario)
+        }
+        return false;
+    }
+
+    const almacenar = () => {
+        axios
+            .put('proyecto/almacenar', {
+                id: open.id,
+                usuario: datoUser.usuario
+            })
+            .then(response => {
+                getData()
+                handleClose()
+            })
+            .catch(error => console.error(error))
+    }
+    const isAlmacenado = (id: number): boolean => {
+        if (id !== -1) {
+            let r = row.find(row => row.id === id)
+            return r.almacenados.some((almacenado: string) => almacenado === datoUser.usuario)
+        }
+        return false;
     }
 
     function BarraLateral(): ReactElement {
@@ -174,14 +234,17 @@ export default function Inicio(): ReactElement {
             </Card>)
     }
 
-    useEffect(() => {
+    const getData = () => {
         axios
             .get("/proyecto")
             .then(response => {
+                console.log(response.data)
                 setRow(response.data)
             })
             .catch(error => console.error(error))
-    }, [])
+    }
+
+    useEffect(getData, [])
 
     return (
         <Grid container direction={"row"}>
@@ -230,9 +293,29 @@ export default function Inicio(): ReactElement {
             >
                 {getCard(open.id)}
                 <DialogActions>
-                    <Button onClick={handleClose}>Inscribirse</Button>
-                    <Button onClick={handleClose} color={"secondary"}>Almacenar</Button>
-                    <Button onClick={handleClose} color={"error"} autoFocus> Salir </Button>
+                    {
+                        isRolRender("Usuario", (
+                            <>
+                                {isInscrito(open.id) ?
+                                    <Button disabled>Inscrito</Button> :
+                                    <Button onClick={inscribirse}>Inscribirse</Button>}
+                                {
+                                    isAlmacenado(open.id) ?
+                                        <Button disabled>Almacenado</Button> :
+                                        <Button onClick={almacenar} color={"secondary"}>Almacenar</Button>
+                                }
+                            </>
+                        ))
+                    }
+                    {
+                        isRolRender("Vicedecana", (
+                            <>
+                                <Button onClick={borrar} color={"error"}>Borrar</Button>
+                            </>
+                        ))
+                    }
+
+                    <Button onClick={handleClose} autoFocus> Salir </Button>
                 </DialogActions>
             </Dialog>
             <Dialog
@@ -280,8 +363,8 @@ export default function Inicio(): ReactElement {
                     />
                 </DialogContent>
                 <DialogActions>
+                    <Button onClick={handleCloseAdd} color={"error"} autoFocus> Cancelar </Button>
                     <Button onClick={save} color={"secondary"}>Aceptar</Button>
-                    <Button onClick={handleCloseAdd} color={"error"} autoFocus> Canselar </Button>
                 </DialogActions>
             </Dialog>
         </Grid>

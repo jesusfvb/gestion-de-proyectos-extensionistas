@@ -11,12 +11,15 @@ public class UsuarioPartProResp {
 
     private String nombre;
 
+    private Integer cantidad;
+
     private List<ProyectoResp> proyectos;
 
     public UsuarioPartProResp(Usuario usuario) {
         this.id = usuario.getId();
         this.nombre = usuario.getNombre();
         this.proyectos = usuario.getProyectos().parallelStream().map(ProyectoResp::new).collect(Collectors.toList());
+        this.cantidad = proyectos.size();
     }
 
     public Integer getId() {
@@ -30,4 +33,5 @@ public class UsuarioPartProResp {
     public List<ProyectoResp> getProyectos() {
         return proyectos;
     }
+
 }

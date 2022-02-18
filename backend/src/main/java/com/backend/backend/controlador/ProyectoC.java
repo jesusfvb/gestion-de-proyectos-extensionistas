@@ -1,6 +1,7 @@
 package com.backend.backend.controlador;
 
 import com.backend.backend.controlador.respuestas.ProyectoResp;
+import com.backend.backend.controlador.solicitud.InscriAlmaceSol;
 import com.backend.backend.controlador.solicitud.ProyectoNewSol;
 import com.backend.backend.servicios.ProyectoS;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,31 @@ public class ProyectoC {
     @PostMapping
     private ResponseEntity<ProyectoResp> save(@RequestBody ProyectoNewSol proyecto) {
         return ResponseEntity.ok(proyectoS.save(proyecto));
+    }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Integer> borrar(@PathVariable Integer id) {
+        return ResponseEntity.ok(proyectoS.borrar(id));
+    }
+
+    @DeleteMapping("/quitar/inscripcion")
+    private ResponseEntity<Integer> quitarInscripcion(@RequestBody InscriAlmaceSol quitarInscripcion) {
+        return ResponseEntity.ok(proyectoS.quitarInscripcion(quitarInscripcion));
+    }
+
+    @DeleteMapping("/quitar/almacen")
+    private ResponseEntity<Integer> quitarAlmacen(@RequestBody InscriAlmaceSol quitarAlmacen) {
+        return ResponseEntity.ok(proyectoS.quitarAlmacen(quitarAlmacen));
+    }
+
+    @PutMapping("/inscribirse")
+    private ResponseEntity<Boolean> inscribirse(@RequestBody InscriAlmaceSol inscribirse) {
+        return ResponseEntity.ok(proyectoS.inscribirse(inscribirse));
+    }
+
+    @PutMapping("/almacenar")
+    private ResponseEntity<Boolean> almacenar(@RequestBody InscriAlmaceSol almacenar) {
+        return ResponseEntity.ok(proyectoS.almacenar(almacenar));
     }
 
 }

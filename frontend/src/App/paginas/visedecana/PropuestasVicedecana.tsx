@@ -76,9 +76,13 @@ export default function PropuestasVicedecana(): ReactElement {
                     <IconButton color={"primary"} onClick={handleClickOpen(param.value)}>
                         <Update/>
                     </IconButton>
-                    <IconButton color={"error"} onClick={borrar(param.value)}>
-                        <Delete/>
-                    </IconButton>
+                    {
+                        (rows.filter(row => row.id === param.value)[0]?.usuario === datoUser.usuario) ?
+                            <IconButton color={"error"} onClick={borrar(param.value)}>
+                                <Delete/>
+                            </IconButton>
+                            : null
+                    }
                 </>
             )
         }]
@@ -269,9 +273,6 @@ export default function PropuestasVicedecana(): ReactElement {
                 <IconButton color={"success"} onClick={handleClickOpen()}>
                     <Add/>
                 </IconButton>
-                <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={borrar()}>
-                    <Delete/>
-                </IconButton>
             </GridToolbarContainer>
         )
     }
@@ -297,6 +298,7 @@ export default function PropuestasVicedecana(): ReactElement {
         axios
             .get("/propuestas")
             .then(response => {
+                console.log(response.data)
                 setRows(response.data)
                 setSelected(response.data[0])
             })
@@ -308,17 +310,6 @@ export default function PropuestasVicedecana(): ReactElement {
                 <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
                     <DataGrid autoPageSize={true} columns={columns} rows={rows}
                               components={{Toolbar: MyToolbarPropuestas,}}
-                              checkboxSelection
-                              onSelectionModelChange={(newSelectionModel) => {
-                                  setSelectionModel(newSelectionModel);
-                              }}
-                              onRowClick={handleClickRow}
-                              disableSelectionOnClick={true}
-                              selectionModel={selectionModel}/>
-                </Grid>
-                <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                    <DataGrid autoPageSize={true} columns={columns} rows={rows}
-                              components={{Toolbar: MyToolbarRegistros,}}
                               checkboxSelection
                               onSelectionModelChange={(newSelectionModel) => {
                                   setSelectionModel(newSelectionModel);
@@ -406,7 +397,7 @@ export default function PropuestasVicedecana(): ReactElement {
             </Dialog>
             <Dialog open={openVer} onClose={handleClickCloseVer}>
                 <DialogTitle>Propuesta</DialogTitle>
-                <DialogContent sx={{width: 450}}>
+                <DialogContent sx={{width: 450, height: "70vh"}}>
                     <Grid
                         container
                         direction="column"
@@ -447,7 +438,7 @@ export default function PropuestasVicedecana(): ReactElement {
                             <TextField
                                 id="outlined-multiline-static"
                                 multiline
-                                rows={10}
+                                rows={7}
                                 defaultValue="Default Value"
                                 value={selected?.descripcion}
                                 sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
@@ -460,7 +451,7 @@ export default function PropuestasVicedecana(): ReactElement {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClickClose}>Salir</Button>
+                    <Button onClick={handleClickCloseVer}>Salir</Button>
                 </DialogActions>
             </Dialog>
         </div>

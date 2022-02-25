@@ -12,7 +12,7 @@ import {
     Autocomplete,
     AutocompleteValue,
     Box,
-    Button,
+    Button, ButtonGroup,
     CircularProgress,
     Dialog,
     DialogActions,
@@ -34,6 +34,7 @@ import {DatosUser} from "../../App";
 
 export default function PropuestasVicedecana(): ReactElement {
     const datoUser = useContext(DatosUser)
+    const [option, setOption] = useState<1 | 2>(1)
     const columns: GridColumns = [
         {
             field: "nombre",
@@ -65,6 +66,7 @@ export default function PropuestasVicedecana(): ReactElement {
             filterable: false,
             headerName: "Acción",
             minWidth: 200,
+            hide: option === 2,
             renderCell: (param) => (
                 <>
                     <IconButton color={"success"} onClick={aceptar(param.value)}>
@@ -135,6 +137,9 @@ export default function PropuestasVicedecana(): ReactElement {
             setValido({...valido, coordinador: reg.test(event.target.value)})
         }
         setCoordinador(event.target.value)
+    }
+    const handleChangeOption = (option: 1 | 2) => (event: MouseEvent) => {
+        setOption(option)
     }
 
     const handleClickOpen = (id: number | undefined = undefined) => (evento: MouseEvent) => {
@@ -261,18 +266,31 @@ export default function PropuestasVicedecana(): ReactElement {
         return (
             <GridToolbarContainer>
                 <GridToolbarFilterButton/>
+                <ButtonGroup size={"small"} sx={{marginLeft: 1}}>
+                    <Button variant={(option === 1) ? "contained" : "outlined"} onClick={handleChangeOption(1)}>
+                        Propuestas
+                    </Button>
+                    <Button variant={(option === 2) ? "contained" : "outlined"} onClick={handleChangeOption(2)}>
+                        Criterios
+                    </Button>
+                </ButtonGroup>
                 <Box sx={{flexGrow: 1}}/>
-                <Typography>Propuestas</Typography>
-                <Box sx={{flexGrow: 1}}/>
-                <IconButton color={"success"} disabled={selectionModel.length === 0} onClick={aceptar()}>
-                    <CheckCircle/>
-                </IconButton>
-                <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={denegar()}>
-                    <HighlightOff/>
-                </IconButton>
-                <IconButton color={"success"} onClick={handleClickOpen()}>
-                    <Add/>
-                </IconButton>
+                {
+                    option === 2 ? null : (
+                        <>
+                            <IconButton color={"success"} disabled={selectionModel.length === 0} onClick={aceptar()}>
+                                <CheckCircle/>
+                            </IconButton>
+                            <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={denegar()}>
+                                <HighlightOff/>
+                            </IconButton>
+                            <IconButton color={"success"} onClick={handleClickOpen()}>
+                                <Add/>
+                            </IconButton>
+                        </>
+                    )
+                }
+
             </GridToolbarContainer>
         )
     }
@@ -298,7 +316,6 @@ export default function PropuestasVicedecana(): ReactElement {
         axios
             .get("/propuestas")
             .then(response => {
-                console.log(response.data)
                 setRows(response.data)
                 setSelected(response.data[0])
             })
@@ -310,7 +327,7 @@ export default function PropuestasVicedecana(): ReactElement {
                 <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
                     <DataGrid autoPageSize={true} columns={columns} rows={rows}
                               components={{Toolbar: MyToolbarPropuestas,}}
-                              checkboxSelection
+                              checkboxSelection={option !== 2}
                               onSelectionModelChange={(newSelectionModel) => {
                                   setSelectionModel(newSelectionModel);
                               }}

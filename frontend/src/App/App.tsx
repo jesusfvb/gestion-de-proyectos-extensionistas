@@ -13,6 +13,7 @@ import isJwtTokenExpired, {decode} from "jwt-check-expiry";
 import PropuestasVicedecana from "./paginas/visedecana/PropuestasVicedecana";
 import PropuestasAsesor from "./paginas/organoAsesor/PropuestasAsesor";
 import Listado from "./paginas/visedecana/Listado";
+import Criterios from "./paginas/organoAsesor/Criterios";
 
 interface InterfaceDatosUser {
     usuario: string,
@@ -156,6 +157,7 @@ export default function App(): ReactElement {
                                                isRolBooleanF("Asesor") ? <PropuestasAsesor/> :
                                                    <Propuestas/>}/>
                                     <Route path="/proyectos" element={<Proyectos/>}/>
+                                    <Route path="/criterios" element={<Criterios/>}/>
                                     <Route path="/listado" element={<Listado/>}/>
                                 </Route>
                                 <Route path="*" element={<E404/>}/>

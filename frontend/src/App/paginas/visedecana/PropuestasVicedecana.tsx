@@ -50,7 +50,17 @@ export default function PropuestasVicedecana(): ReactElement {
             type: "date",
             headerName: "Fecha",
             headerAlign: "left",
-            align: "left"
+            align: "left",
+            hide: option === 2
+        },
+        {
+            field: "coordinador",
+            flex: 1,
+            type: "string",
+            headerName: "Coordinador",
+            headerAlign: "left",
+            align: "left",
+            hide: option === 1,
         },
         {
             field: "estado",
@@ -59,6 +69,7 @@ export default function PropuestasVicedecana(): ReactElement {
             headerName: "Estado",
             headerAlign: "left",
             align: "left",
+            hide: option === 2,
             valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
         },
         {
@@ -297,13 +308,13 @@ export default function PropuestasVicedecana(): ReactElement {
 
     useEffect(() => {
         axios
-            .get("/propuestas")
+            .get(option === 2 ? "/criterios" : "/propuestas")
             .then(response => {
                 setRows(response.data)
                 setSelected(response.data[0])
             })
             .catch(error => console.error(error))
-    }, [])
+    }, [option])
     return (
         <div>
             <Grid container spacing={1}>
@@ -396,38 +407,42 @@ export default function PropuestasVicedecana(): ReactElement {
                 </DialogActions>
             </Dialog>
             <Dialog open={openVer} onClose={handleClickCloseVer}>
-                <DialogTitle>Propuesta</DialogTitle>
-                <DialogContent sx={{width: 450, height: "70vh"}}>
+                <DialogTitle>{option === 2 ? "Criterio" : "Propuesta"}</DialogTitle>
+                <DialogContent sx={{width: 450, height: option === 2 ? "40vh" : "70vh"}}>
                     <Grid
                         container
                         direction="column"
                         justifyContent="left"
                         alignItems="flex-start"
                     >
-                        <Typography sx={{marginLeft: 2, marginBottom: 2, marginTop: 1}} variant={"h4"}>
-                            {selected?.nombre}
-                        </Typography>
-                        <Typography sx={{marginLeft: 2, marginBottom: 1,}} variant={"subtitle1"}>
-                            Información
-                        </Typography>
-                        <Grid item container direction="row" sx={{marginBottom: 1}}>
-                            <Person sx={{marginLeft: 2, marginRight: 1}}/>
-                            <Typography variant={"h6"} sx={{marginRight: 1}}>
-                                Coordinador:
-                            </Typography>
-                            <Typography variant={"h5"}>
-                                {selected?.coordinador}
-                            </Typography>
-                        </Grid>
-                        <Grid item container direction="row" sx={{marginBottom: 1}}>
-                            <LocationOn sx={{marginLeft: 2, marginRight: 1}}/>
-                            <Typography variant={"h6"} sx={{marginRight: 1}}>
-                                Area:
-                            </Typography>
-                            <Typography variant={"h5"}>
-                                {selected?.area}
-                            </Typography>
-                        </Grid>
+                        {option === 2 ? null : (
+                            <>
+                                <Typography sx={{marginLeft: 2, marginBottom: 2, marginTop: 1}} variant={"h4"}>
+                                    {selected?.nombre}
+                                </Typography>
+                                <Typography sx={{marginLeft: 2, marginBottom: 1,}} variant={"subtitle1"}>
+                                    Información
+                                </Typography>
+                                <Grid item container direction="row" sx={{marginBottom: 1}}>
+                                    <Person sx={{marginLeft: 2, marginRight: 1}}/>
+                                    <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                        Coordinador:
+                                    </Typography>
+                                    <Typography variant={"h5"}>
+                                        {selected?.coordinador}
+                                    </Typography>
+                                </Grid>
+                                <Grid item container direction="row" sx={{marginBottom: 1}}>
+                                    <LocationOn sx={{marginLeft: 2, marginRight: 1}}/>
+                                    <Typography variant={"h6"} sx={{marginRight: 1}}>
+                                        Area:
+                                    </Typography>
+                                    <Typography variant={"h5"}>
+                                        {selected?.area}
+                                    </Typography>
+                                </Grid>
+                            </>
+                        )}
                         <Grid item container direction="column">
                             <Grid item container direction="row" sx={{marginBottom: 1}}>
                                 <Description sx={{marginLeft: 2, marginRight: 1}}/>
@@ -439,12 +454,11 @@ export default function PropuestasVicedecana(): ReactElement {
                                 id="outlined-multiline-static"
                                 multiline
                                 rows={7}
-                                defaultValue="Default Value"
-                                value={selected?.descripcion}
+                                value={option === 2 ? selected?.description : selected?.descripcion}
                                 sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
                                 onChange={(event) => {
                                     event.stopPropagation()
-                                    event.target.value = selected?.descripcion
+                                    event.target.value = option === 2 ? selected?.description : selected?.descripcion
                                 }}
                             />
                         </Grid>

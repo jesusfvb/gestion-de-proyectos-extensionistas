@@ -98,7 +98,7 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                     (isRolBoolean("Vicedecana")) ?
                                         <Tab label="Listados    " value={"/listado"}/> :
                                         isRolBoolean("Asesor") ?
-                                            <Tab label="Criterios" value={"/proyectos"}/> :
+                                            <Tab label="Criterios" value={"/criterios"}/> :
                                             <Tab label="Proyectos" value={"/proyectos"}/>
                                 }
                                 <Tab label="Propuestas" value={"/propuestas"}/>

@@ -64,6 +64,11 @@ public class PropuestasSI implements PropuestaS {
     }
 
     @Override
+    public List<PropuestaResp> listarAprobadas() {
+        return propuestaR.findByEstado(Propuesta.Estado.ACEPTADA).parallelStream().map(PropuestaResp::new).collect(Collectors.toList());
+    }
+
+    @Override
     public PropuestaResp add(PropuestaSo propuesta) {
         return new PropuestaResp(propuestaR.save(propuesta.getPropuesta(usuarioR.findByUsuario(propuesta.getAutor()))));
     }

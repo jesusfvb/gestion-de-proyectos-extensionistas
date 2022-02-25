@@ -12,4 +12,6 @@ public interface PropuestaR extends JpaRepository<Propuesta, Integer> {
 
     List<Propuesta> findByAutor_Usuario(String usuario);
 
+    List<Propuesta> findByEstado(Propuesta.Estado estado);
+
 }

@@ -1,6 +1,5 @@
 import {
     AppBar,
-    Badge,
     Box,
     CssBaseline,
     Grid,
@@ -14,9 +13,8 @@ import {
 } from "@mui/material";
 import {Fragment, MouseEvent, ReactElement, SyntheticEvent, useContext, useEffect, useRef, useState} from "react";
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from "../img/logo.png";
-import {useLocation, useNavigate, Outlet} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {DatosUser, IsRole} from "../App";
 
 export default function BarraDeNavegacion(props: { serrarSession: Function }): ReactElement {
@@ -99,7 +97,9 @@ export default function BarraDeNavegacion(props: { serrarSession: Function }): R
                                 {
                                     (isRolBoolean("Vicedecana")) ?
                                         <Tab label="Listados    " value={"/listado"}/> :
-                                        <Tab label="Proyectos" value={"/proyectos"}/>
+                                        isRolBoolean("Asesor") ?
+                                            <Tab label="Criterios" value={"/criterios"}/> :
+                                            <Tab label="Proyectos" value={"/proyectos"}/>
                                 }
                                 <Tab label="Propuestas" value={"/propuestas"}/>
                             </Tabs>

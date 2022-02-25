@@ -128,7 +128,7 @@ export default function Inicio(): ReactElement {
             .catch(error => console.error(error))
     }
     const isInscrito = (id: number): boolean => {
-        if (id !== -1) {
+        if (id !== -1 && row.length > 0) {
             let r = row.find(row => row.id === id)
             return r.inscritos.some((inscritos: string) => inscritos === datoUser.usuario)
         }
@@ -148,7 +148,7 @@ export default function Inicio(): ReactElement {
             .catch(error => console.error(error))
     }
     const isAlmacenado = (id: number): boolean => {
-        if (id !== -1) {
+        if (id !== -1 && row.length > 0) {
             let r = row.find(row => row.id === id)
             return r.almacenados.some((almacenado: string) => almacenado === datoUser.usuario)
         }
@@ -238,7 +238,6 @@ export default function Inicio(): ReactElement {
         axios
             .get("/proyecto")
             .then(response => {
-                console.log(response.data)
                 setRow(response.data)
             })
             .catch(error => console.error(error))

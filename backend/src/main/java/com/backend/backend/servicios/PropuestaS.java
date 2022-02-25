@@ -18,10 +18,11 @@ public interface PropuestaS {
 
     List<PropuestaResp> denegar(Integer[] ids);
 
+    List<PropuestaResp> listarAprobadas();
+
     PropuestaResp add(PropuestaSo propuesta);
 
     PropuestaResp update(PropuestaUpSo propuesta);
 
     Integer[] borrar(Integer[] ids);
-
 }

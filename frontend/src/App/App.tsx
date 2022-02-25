@@ -11,7 +11,9 @@ import Proyectos from "./paginas/Proyectos";
 import {useSnackbar} from "notistack";
 import isJwtTokenExpired, {decode} from "jwt-check-expiry";
 import PropuestasVicedecana from "./paginas/visedecana/PropuestasVicedecana";
+import PropuestasAsesor from "./paginas/organoAsesor/PropuestasAsesor";
 import Listado from "./paginas/visedecana/Listado";
+import Criterios from "./paginas/organoAsesor/Criterios";
 
 interface InterfaceDatosUser {
     usuario: string,
@@ -152,8 +154,10 @@ export default function App(): ReactElement {
                                     <Route path="/inicio" element={<Inicio/>}/>
                                     <Route path="/propuestas"
                                            element={(isRolBooleanF("Vicedecana")) ? <PropuestasVicedecana/> :
-                                               <Propuestas/>}/>
+                                               isRolBooleanF("Asesor") ? <PropuestasAsesor/> :
+                                                   <Propuestas/>}/>
                                     <Route path="/proyectos" element={<Proyectos/>}/>
+                                    <Route path="/criterios" element={<Criterios/>}/>
                                     <Route path="/listado" element={<Listado/>}/>
                                 </Route>
                                 <Route path="*" element={<E404/>}/>

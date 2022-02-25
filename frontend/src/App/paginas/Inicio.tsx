@@ -238,7 +238,6 @@ export default function Inicio(): ReactElement {
         axios
             .get("/proyecto")
             .then(response => {
-                console.log(response.data)
                 setRow(response.data)
             })
             .catch(error => console.error(error))

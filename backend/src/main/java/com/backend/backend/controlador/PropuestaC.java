@@ -29,6 +29,11 @@ public class PropuestaC {
         return ResponseEntity.ok(propuestaS.listarPorUsuario(usuario));
     }
 
+    @GetMapping("/aprobadas")
+    private ResponseEntity<List<PropuestaResp>> listarAprobadas() {
+        return ResponseEntity.ok(propuestaS.listarAprobadas());
+    }
+
     @PostMapping
     private ResponseEntity<PropuestaResp> add(@RequestBody PropuestaSo propuesta) {
         return ResponseEntity.ok(propuestaS.add(propuesta));

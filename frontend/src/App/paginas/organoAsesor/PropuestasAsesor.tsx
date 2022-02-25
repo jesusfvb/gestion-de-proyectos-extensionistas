@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, MouseEvent, ReactElement, SyntheticEvent, useContext, useEffect, useState} from "react";
+import {ChangeEvent, FormEvent, MouseEvent, ReactElement, useContext, useEffect, useState} from "react";
 import {
     DataGrid,
     GridColumns,
@@ -9,11 +9,8 @@ import {
     MuiEvent
 } from "@mui/x-data-grid";
 import {
-    Autocomplete,
-    AutocompleteValue,
     Box,
-    Button, ButtonGroup,
-    CircularProgress,
+    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -28,14 +25,41 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {Add, CheckCircle, Delete, Description, HighlightOff, LocationOn, Person, Update} from "@mui/icons-material";
+import {Add, Delete, Description, LocationOn, Person, Update} from "@mui/icons-material";
 import axios from "axios";
 import {DatosUser} from "../../App";
 
-export default function PropuestasVicedecana(): ReactElement {
+export default function PropuestasAsesor(): ReactElement {
     const datoUser = useContext(DatosUser)
     const [option, setOption] = useState<1 | 2>(1)
     const columns: GridColumns = [
+        {
+            field: "nombre",
+            flex: 1,
+            type: "string",
+            headerName: "Nombre",
+            headerAlign: "left",
+            align: "left"
+        },
+        {
+            field: "fechaSolicitud",
+            flex: 1,
+            type: "date",
+            headerName: "Fecha",
+            headerAlign: "left",
+            align: "left"
+        },
+        {
+            field: "estado",
+            flex: 1,
+            type: "singleSelect",
+            headerName: "Estado",
+            headerAlign: "left",
+            align: "left",
+            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
+        },
+    ]
+    const columns2: GridColumns = [
         {
             field: "nombre",
             flex: 1,
@@ -65,30 +89,21 @@ export default function PropuestasVicedecana(): ReactElement {
             field: "id",
             filterable: false,
             headerName: "Acción",
-            minWidth: 200,
+            minWidth: 130,
             hide: option === 2,
             renderCell: (param) => (
                 <>
-                    <IconButton color={"success"} onClick={aceptar(param.value)}>
-                        <CheckCircle/>
-                    </IconButton>
-                    <IconButton color={"error"} onClick={denegar(param.value)}>
-                        <HighlightOff/>
-                    </IconButton>
                     <IconButton color={"primary"} onClick={handleClickOpen(param.value)}>
                         <Update/>
                     </IconButton>
-                    {
-                        (rows.filter(row => row.id === param.value)[0]?.usuario === datoUser.usuario) ?
-                            <IconButton color={"error"} onClick={borrar(param.value)}>
-                                <Delete/>
-                            </IconButton>
-                            : null
-                    }
+                    <IconButton color={"error"} onClick={borrar(param.value)}>
+                        <Delete/>
+                    </IconButton>
                 </>
             )
         }]
     const [rows, setRows] = useState<Array<any>>([])
+    const [rows2, setRows2] = useState<Array<any>>([])
     const [open, setOpen] = useState<{ open: boolean, id: number | undefined }>({open: false, id: undefined});
     const [nombre, setNombre] = useState<string>("");
     const [coordinador, setCoordinador] = useState<string>("");
@@ -129,7 +144,7 @@ export default function PropuestasVicedecana(): ReactElement {
         }
         setDescripcion(event.target.value)
     }
-    const handleChangeCooarrdinador = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeCoordinador = (event: ChangeEvent<HTMLInputElement>) => {
         let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
         if (event.target.value.length === 0) {
             setValido({...valido, coordinador: true})
@@ -138,14 +153,11 @@ export default function PropuestasVicedecana(): ReactElement {
         }
         setCoordinador(event.target.value)
     }
-    const handleChangeOption = (option: 1 | 2) => (event: MouseEvent) => {
-        setOption(option)
-    }
 
     const handleClickOpen = (id: number | undefined = undefined) => (evento: MouseEvent) => {
         evento.stopPropagation()
         if (id !== undefined) {
-            let propuesta = rows.find((p: any) => p.id === id)
+            let propuesta = rows2.find((p: any) => p.id === id)
             setNombre(propuesta.nombre)
             setCoordinador(propuesta.coordinador)
             setArea(propuesta.area)
@@ -179,9 +191,13 @@ export default function PropuestasVicedecana(): ReactElement {
         setOpenVer(false)
     };
 
-    const handleClickRow = (params: GridRowParams, event: MuiEvent<MouseEvent<HTMLElement>>) => {
+    const handleClickRow = (option: 1 | 2) => (params: GridRowParams, event: MuiEvent<MouseEvent<HTMLElement>>) => {
         event.preventDefault()
-        setSelected(rows.find(value => value.id === params.id))
+        if (option == 1) {
+            setSelected(rows.find(value => value.id === params.id))
+        } else {
+            setSelected(rows2.find(value => value.id === params.id))
+        }
         handleClickOpenVer()
     }
 
@@ -198,9 +214,9 @@ export default function PropuestasVicedecana(): ReactElement {
                         descripcion: descripcion,
                     })
                     .then(response => {
-                        let newRow = [...rows]
+                        let newRow = [...rows2]
                         newRow[newRow.findIndex((row: any) => row.id === open.id)] = response.data
-                        setRows(newRow)
+                        setRows2(newRow)
                         handleClickClose()
                     })
                     .catch(error => console.error(error))
@@ -214,7 +230,7 @@ export default function PropuestasVicedecana(): ReactElement {
                         autor: datoUser.usuario,
                     })
                     .then(response => {
-                        setRows([...rows, response.data])
+                        setRows2([...rows2, response.data])
                         handleClickClose()
                     })
                     .catch(error => console.error(error))
@@ -226,38 +242,11 @@ export default function PropuestasVicedecana(): ReactElement {
         axios
             .delete("/propuestas", {data: (id === undefined) ? selectionModel : [id]})
             .then(response => {
-                let newRow = [...rows]
+                let newRow = [...rows2]
                 response.data.forEach((id: number) => {
                     newRow.splice(newRow.findIndex((row: any) => row.id === id), 1)
                 })
-                setRows(newRow)
-            })
-            .catch(error => console.error(error))
-    }
-
-    const aceptar = (id: number | undefined = undefined) => (event: MouseEvent) => {
-        event.stopPropagation()
-        axios
-            .put("/propuestas/aceptar", (id === undefined) ? selectionModel : [id])
-            .then(response => {
-                let newRow = [...rows]
-                response.data.forEach((d: any) => {
-                    newRow.splice(newRow.findIndex((row: any) => row.id === d.id), 1, d)
-                })
-                setRows(newRow)
-            })
-            .catch(error => console.error(error))
-    }
-    const denegar = (id: number | undefined = undefined) => (event: MouseEvent) => {
-        event.stopPropagation()
-        axios
-            .put("/propuestas/denegar", (id === undefined) ? selectionModel : [id])
-            .then(response => {
-                let newRow = [...rows]
-                response.data.forEach((d: any) => {
-                    newRow.splice(newRow.findIndex((row: any) => row.id === d.id), 1, d)
-                })
-                setRows(newRow)
+                setRows2(newRow)
             })
             .catch(error => console.error(error))
     }
@@ -266,40 +255,40 @@ export default function PropuestasVicedecana(): ReactElement {
         return (
             <GridToolbarContainer>
                 <GridToolbarFilterButton/>
-                <ButtonGroup size={"small"} sx={{marginLeft: 1}}>
-                    <Button variant={(option === 1) ? "contained" : "outlined"} onClick={handleChangeOption(1)}>
-                        Propuestas
-                    </Button>
-                    <Button variant={(option === 2) ? "contained" : "outlined"} onClick={handleChangeOption(2)}>
-                        Criterios
-                    </Button>
-                </ButtonGroup>
                 <Box sx={{flexGrow: 1}}/>
-                {
-                    option === 2 ? null : (
-                        <>
-                            <IconButton color={"success"} disabled={selectionModel.length === 0} onClick={aceptar()}>
-                                <CheckCircle/>
-                            </IconButton>
-                            <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={denegar()}>
-                                <HighlightOff/>
-                            </IconButton>
-                            <IconButton color={"success"} onClick={handleClickOpen()}>
-                                <Add/>
-                            </IconButton>
-                        </>
-                    )
-                }
+                <Typography>Aprobadas</Typography>
+                <Box sx={{flexGrow: 1}}/>
+            </GridToolbarContainer>
+        )
+    }
 
+    function MyToolbarPropuestas2(): ReactElement {
+        return (
+            <GridToolbarContainer>
+                <GridToolbarFilterButton/>
+                <Box sx={{flexGrow: 1}}/>
+                <IconButton color={"success"} onClick={handleClickOpen()}>
+                    <Add/>
+                </IconButton>
+                <IconButton color={"error"} disabled={selectionModel.length === 0} onClick={borrar()}>
+                    <Delete/>
+                </IconButton>
             </GridToolbarContainer>
         )
     }
 
     useEffect(() => {
         axios
-            .get("/propuestas")
+            .get("/propuestas/aprobadas")
             .then(response => {
                 setRows(response.data)
+                setSelected(response.data[0])
+            })
+            .catch(error => console.error(error))
+        axios
+            .get("/propuestas/usuario/" + datoUser.usuario)
+            .then(response => {
+                setRows2(response.data)
                 setSelected(response.data[0])
             })
             .catch(error => console.error(error))
@@ -310,11 +299,17 @@ export default function PropuestasVicedecana(): ReactElement {
                 <Grid item style={{height: "calc(100vh - 100px)"}} xl={true} lg={true} md={true} sm={true} xs={true}>
                     <DataGrid autoPageSize={true} columns={columns} rows={rows}
                               components={{Toolbar: MyToolbarPropuestas,}}
+                              onRowClick={handleClickRow(1)}
+                              disableSelectionOnClick={true}/>
+                </Grid>
+                <Grid item style={{height: "calc(100vh - 100px)"}} xl={6} lg={6} md={6} sm={6} xs={6}>
+                    <DataGrid autoPageSize={true} columns={columns2} rows={rows2}
+                              components={{Toolbar: MyToolbarPropuestas2,}}
                               checkboxSelection={option !== 2}
                               onSelectionModelChange={(newSelectionModel) => {
                                   setSelectionModel(newSelectionModel);
                               }}
-                              onRowClick={handleClickRow}
+                              onRowClick={handleClickRow(2)}
                               disableSelectionOnClick={true}
                               selectionModel={selectionModel}/>
                 </Grid>
@@ -343,7 +338,7 @@ export default function PropuestasVicedecana(): ReactElement {
                         fullWidth
                         variant="outlined"
                         value={coordinador}
-                        onChange={handleChangeCooarrdinador}
+                        onChange={handleChangeCoordinador}
                         error={valido.coordinador}
                     />
                     <FormControl fullWidth sx={{marginTop: 2}}>
@@ -439,7 +434,6 @@ export default function PropuestasVicedecana(): ReactElement {
                                 id="outlined-multiline-static"
                                 multiline
                                 rows={7}
-                                defaultValue="Default Value"
                                 value={selected?.descripcion}
                                 sx={{paddingTop: 1, paddingRight: 2, paddingLeft: 2, paddingBottom: 2}}
                                 onChange={(event) => {

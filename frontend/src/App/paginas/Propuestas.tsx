@@ -56,7 +56,7 @@ export default function Propuestas(): ReactElement {
             headerName: "Estado",
             headerAlign: "left",
             align: "left",
-            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
+            valueOptions: ["PENDIENTE", "ACEPTADA", "DENEGADA"]
         },
         {
             field: "id",

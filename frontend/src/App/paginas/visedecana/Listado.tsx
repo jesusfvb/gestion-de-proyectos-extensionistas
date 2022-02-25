@@ -38,7 +38,7 @@ export default function Listado(): ReactElement {
         {
             field: "cantidad",
             flex: 1,
-            type: "date",
+            type: "number",
             headerName: "Cantidad",
             headerAlign: "left",
             align: "left"

@@ -70,7 +70,7 @@ export default function PropuestasVicedecana(): ReactElement {
             headerAlign: "left",
             align: "left",
             hide: option === 2,
-            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
+            valueOptions: ["PENDIENTE", "ACEPTADA", "DENEGADA"]
         },
         {
             field: "id",

@@ -120,12 +120,10 @@ export default function PropuestasAsesor(): ReactElement {
     const [openVer, setOpenVer] = useState<boolean>(false)
 
     const handleChangeNombre = (event: ChangeEvent<HTMLInputElement>) => {
-        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
-        if (event.target.value.length === 0) {
-            setValido({...valido, nombre: true})
-        } else {
-            setValido({...valido, nombre: reg.test(event.target.value)})
-        }
+        setValido({
+            ...valido,
+            nombre: event.target.value.match("^[A-Za-zƒŠŒŽšœžŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèé êëìíîïðñòóôõöøùúûüýþÿ]*$") === null
+        })
         setNombre(event.target.value)
     }
     const handleChangeArea = (event: SelectChangeEvent) => {
@@ -145,12 +143,10 @@ export default function PropuestasAsesor(): ReactElement {
         setDescripcion(event.target.value)
     }
     const handleChangeCoordinador = (event: ChangeEvent<HTMLInputElement>) => {
-        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
-        if (event.target.value.length === 0) {
-            setValido({...valido, coordinador: true})
-        } else {
-            setValido({...valido, coordinador: reg.test(event.target.value)})
-        }
+        setValido({
+            ...valido,
+            coordinador: event.target.value.match("^[A-Za-zƒŠŒŽšœžŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ ]*$") === null
+        })
         setCoordinador(event.target.value)
     }
 

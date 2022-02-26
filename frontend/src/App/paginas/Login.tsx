@@ -13,16 +13,17 @@ import {
     Typography
 } from "@mui/material";
 import logo from '../img/logo.png'
-import axios from "axios";
 import {FormEvent, ReactElement} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function Login(props: { iniciarSession: Function }): ReactElement {
     const theme = createTheme()
-
+    const navegate = useNavigate()
     const iniciarSessionM = (even: FormEvent): void => {
         even.preventDefault()
         let inputs = even.currentTarget.getElementsByTagName("input")
         props.iniciarSession(inputs[0].value, inputs[1].value)
+        navegate("/inicio")
     }
 
     function Copyright(props: any): ReactElement {

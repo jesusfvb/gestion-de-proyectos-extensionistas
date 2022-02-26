@@ -17,16 +17,20 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CallIcon from '@mui/icons-material/Call';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import {ChangeEvent, ReactElement, useContext, useEffect, useState} from "react";
-import img1 from '../img/1.jpg'
-import img2 from '../img/imagen2.jpg'
-import img3 from '../img/imagen3.jpg'
-import img4 from '../img/imagen4.jpg'
 import document1 from '../documentos/formato para inscribir.pdf'
 import document2 from '../documentos/Manualde procedimientos.pdf'
 import document3 from '../documentos/Procedimiento proyectos.pdf'
 import {Add} from "@mui/icons-material";
 import {DatosUser, IsRole} from "../App";
 import axios from "axios";
+import baile from "../img/baile.jpg"
+import cultura from "../img/cultura.webp"
+import deporte from "../img/deporte.webp"
+import musica from "../img/musica.webp"
+import programacion from "../img/programacion.webp"
+import radio from "../img/radio-locutor.jpg"
+import sociedad from "../img/sociedad.jpg"
+import videojuego from "../img/videojuego.webp"
 
 export default function Inicio(): ReactElement {
     const {isRolRender} = useContext(IsRole)
@@ -37,10 +41,12 @@ export default function Inicio(): ReactElement {
     const [nombre, setNombre] = useState<string>("");
     const [coordinador, setCoordinador] = useState<string>("");
     const [descripcion, setDescripcion] = useState<string>("");
-    const [valido, setValido] = useState<{ nombre: boolean, coordinador: boolean, descripcion: boolean }>({
+    const [img, setImg] = useState<string>('');
+    const [valido, setValido] = useState<{ nombre: boolean, coordinador: boolean, descripcion: boolean, img: boolean }>({
         nombre: true,
         coordinador: true,
-        descripcion: true
+        descripcion: true,
+        img: false
     })
 
     const handleClickOpen = (id: number) => () => {
@@ -56,11 +62,13 @@ export default function Inicio(): ReactElement {
         setValido({
             nombre: true,
             coordinador: true,
-            descripcion: true
+            descripcion: true,
+            img: true
         })
         setNombre("")
         setCoordinador("")
         setDescripcion("")
+        setImg("")
         setOpenAdd({open: false, id: undefined});
     };
 
@@ -90,12 +98,21 @@ export default function Inicio(): ReactElement {
         }
         setCoordinador(event.target.value)
     }
+    const handleChangeImg = (event: SelectChangeEvent) => {
+        if (event.target.value.length === 0) {
+            setValido({...valido, img: true})
+        } else {
+            setValido({...valido, img: false})
+        }
+        setImg(event.target.value as string);
+    };
 
     const save = () => {
         axios.post("/proyecto", {
             nombre: nombre,
             coordinador: coordinador,
-            descripcion: descripcion
+            descripcion: descripcion,
+            img: img
         })
             .then(response => {
                 setRow([...row, response.data])
@@ -216,7 +233,7 @@ export default function Inicio(): ReactElement {
                 <CardMedia
                     component="img"
                     height="140"
-                    image={img1}
+                    image={value?.img}
                     alt="green iguana"
                 />
                 <CardContent>
@@ -255,7 +272,7 @@ export default function Inicio(): ReactElement {
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image={img1}
+                                    image={value?.img}
                                     alt="green iguana"
                                 />
                                 <CardContent>
@@ -336,6 +353,26 @@ export default function Inicio(): ReactElement {
                         onChange={handleChangeNombre}
                         error={valido.nombre}
                     />
+                    <FormControl fullWidth sx={{marginTop: 2}}>
+                        <InputLabel id="demo-simple-select-label">Imagen</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={img}
+                            label="Imagen"
+                            onChange={handleChangeImg}
+                            error={valido.img}
+                        >
+                            <MenuItem value={baile}>Baile</MenuItem>
+                            <MenuItem value={cultura}>Cultura</MenuItem>
+                            <MenuItem value={deporte}>Deporte</MenuItem>
+                            <MenuItem value={musica}>Música</MenuItem>
+                            <MenuItem value={programacion}>Programación</MenuItem>
+                            <MenuItem value={radio}>Radio</MenuItem>
+                            <MenuItem value={videojuego}>Videojuego</MenuItem>
+                            <MenuItem value={sociedad}>Sociedad</MenuItem>
+                        </Select>
+                    </FormControl>
                     <TextField
                         autoFocus
                         margin="dense"

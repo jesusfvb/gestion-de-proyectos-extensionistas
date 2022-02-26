@@ -11,6 +11,8 @@ public class ProyectoNewSol {
 
     private String descripcion;
 
+    private String img;
+
     public ProyectoNewSol() {
     }
 
@@ -26,6 +28,10 @@ public class ProyectoNewSol {
         return descripcion;
     }
 
+    public String getImg() {
+        return img;
+    }
+
     @JsonIgnore
     public Proyecto getProyecto() {
         Proyecto proyecto = new Proyecto();
@@ -33,6 +39,7 @@ public class ProyectoNewSol {
         proyecto.setEstado(Proyecto.Estado.ACTIVO);
         proyecto.setCoordinador(this.coordinador);
         proyecto.setDescription(this.descripcion);
+        proyecto.setImg(this.img);
         return proyecto;
     }
 }

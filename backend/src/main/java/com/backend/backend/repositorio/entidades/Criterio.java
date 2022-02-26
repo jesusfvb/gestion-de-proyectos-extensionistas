@@ -18,6 +18,9 @@ public class Criterio extends Entidad {
     @Column
     private String descripcion;
 
+    @Column
+    private Boolean listo;
+
     public Criterio() {
     }
 
@@ -51,5 +54,13 @@ public class Criterio extends Entidad {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Boolean getListo() {
+        return listo;
+    }
+
+    public void setListo(Boolean listo) {
+        this.listo = listo;
     }
 }

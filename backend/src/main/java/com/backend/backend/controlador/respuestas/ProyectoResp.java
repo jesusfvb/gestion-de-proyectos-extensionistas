@@ -18,6 +18,8 @@ public class ProyectoResp {
 
     private String estado;
 
+    private String img;
+
     public List<String> inscritos;
 
     public List<String> almacenados;
@@ -30,6 +32,7 @@ public class ProyectoResp {
         this.estado = proyecto.getEstado().name();
         this.inscritos = proyecto.getParticipantes().stream().map(Usuario::getUsuario).collect(Collectors.toList());
         this.almacenados = proyecto.getAlamacenados().stream().map(Usuario::getUsuario).collect(Collectors.toList());
+        this.img = proyecto.getImg();
     }
 
     public Integer getId() {
@@ -58,5 +61,9 @@ public class ProyectoResp {
 
     public List<String> getAlmacenados() {
         return almacenados;
+    }
+
+    public String getImg() {
+        return img;
     }
 }

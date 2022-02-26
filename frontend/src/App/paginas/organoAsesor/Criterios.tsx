@@ -26,12 +26,13 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {Add, Delete, Description, LocationOn, Person, Update} from "@mui/icons-material";
+import {Add, Check, Delete, Description, Update} from "@mui/icons-material";
 import axios from "axios";
 import {DatosUser} from "../../App";
 
 export default function Criterios(): ReactElement {
     const datoUser = useContext(DatosUser)
+    const [rows, setRows] = useState<Array<any>>([])
     const columns: GridColumns = [
         {
             field: "nombre",
@@ -50,12 +51,32 @@ export default function Criterios(): ReactElement {
             align: "left",
         },
         {
+            field: "area",
+            flex: 1,
+            type: "string",
+            headerName: "Area",
+            headerAlign: "left",
+            align: "left",
+        },
+        {
+            field: "listo",
+            type: "boolean",
+            headerName: "Listo",
+            headerAlign: "left",
+            align: "left",
+            minWidth: 10
+        },
+        {
             field: "id",
             filterable: false,
             headerName: "Acción",
             minWidth: 130,
             renderCell: (param) => (
                 <>
+                    <IconButton color={"primary"} onClick={listo(param.value)}
+                                disabled={rows.find((row: any) => row.id === param.id)?.listo}>
+                        <Check/>
+                    </IconButton>
                     <IconButton color={"primary"} onClick={handleClickOpen(param.value)}>
                         <Update/>
                     </IconButton>
@@ -65,15 +86,16 @@ export default function Criterios(): ReactElement {
                 </>
             )
         }]
-    const [rows, setRows] = useState<Array<any>>([])
     const [open, setOpen] = useState<{ open: boolean, id: number | undefined }>({open: false, id: undefined});
     const [nombre, setNombre] = useState<string>("");
     const [coordinador, setCoordinador] = useState<string>("");
+    const [area, setArea] = useState<string>("");
     const [descripcion, setDescripcion] = useState<string>("");
     const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
-    const [valido, setValido] = useState<{ nombre: boolean, coordinador: boolean, descripcion: boolean }>({
+    const [valido, setValido] = useState<{ nombre: boolean, coordinador: boolean, area: boolean, descripcion: boolean }>({
         nombre: true,
         coordinador: true,
+        area: true,
         descripcion: true
     })
     const [selected, setSelected] = useState<any>()
@@ -95,6 +117,14 @@ export default function Criterios(): ReactElement {
         }
         setDescripcion(event.target.value)
     }
+    const handleChangeArea = (event: SelectChangeEvent) => {
+        if (event.target.value !== "") {
+            setValido({...valido, area: false})
+        } else {
+            setValido({...valido, area: true})
+        }
+        setArea(event.target.value as string);
+    };
     const handleChangeCooarrdinador = (event: ChangeEvent<HTMLInputElement>) => {
         let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
         if (event.target.value.length === 0) {
@@ -111,10 +141,12 @@ export default function Criterios(): ReactElement {
             let propuesta = rows.find((p: any) => p.id === id)
             setNombre(propuesta.nombre)
             setCoordinador(propuesta.coordinador)
+            setArea(propuesta.area)
             setDescripcion(propuesta.description)
             setValido({
                 nombre: false,
                 coordinador: false,
+                area: false,
                 descripcion: false
             })
         }
@@ -124,10 +156,12 @@ export default function Criterios(): ReactElement {
         setOpen({open: false, id: undefined});
         setNombre("")
         setCoordinador("")
+        setArea("")
         setDescripcion("")
         setValido({
             nombre: true,
             coordinador: true,
+            area: true,
             descripcion: true
         })
     };
@@ -146,6 +180,7 @@ export default function Criterios(): ReactElement {
                         id: open.id,
                         nombre: nombre,
                         coordinador: coordinador,
+                        area: area,
                         description: descripcion,
                     })
                     .then(response => {
@@ -160,8 +195,8 @@ export default function Criterios(): ReactElement {
                     .post("/criterios", {
                         nombre: nombre,
                         coordinador: coordinador,
+                        area: area,
                         description: descripcion,
-                        autor: datoUser.usuario,
                     })
                     .then(response => {
                         setRows([...rows, response.data])
@@ -184,6 +219,14 @@ export default function Criterios(): ReactElement {
             })
             .catch(error => console.error(error))
     }
+    const listo = (id: number) => () => {
+        axios
+            .post("/criterios/listo/" + id)
+            .then(response => {
+                getData()
+            })
+            .catch(error => console.error(error))
+    }
 
     function MyToolbar(): ReactElement {
         return (
@@ -200,7 +243,7 @@ export default function Criterios(): ReactElement {
         )
     }
 
-    useEffect(() => {
+    const getData = () => {
         axios
             .get("/criterios")
             .then(response => {
@@ -208,7 +251,8 @@ export default function Criterios(): ReactElement {
                 setSelected(response.data[0])
             })
             .catch(error => console.error(error))
-    }, [])
+    }
+    useEffect(getData, [])
     return (
         <div>
             <Grid container>
@@ -280,6 +324,37 @@ export default function Criterios(): ReactElement {
                         onChange={handleChangeCooarrdinador}
                         error={valido.coordinador}
                     />
+                    <FormControl fullWidth sx={{marginTop: 2}}>
+                        <InputLabel id="area-label">Area</InputLabel>
+                        <Select
+                            labelId="area-label"
+                            id="area"
+                            value={area}
+                            label="Area"
+                            onChange={handleChangeArea}
+                            error={valido.area}
+                        >
+                            <MenuItem value={'Facultad_1'}>Facultad 1</MenuItem>
+                            <MenuItem value={'Facultad_2'}>Facultad 2</MenuItem>
+                            <MenuItem value={'Facultad_3'}>Facultad 3</MenuItem>
+                            <MenuItem value={'Facultad_4'}>Facultad 4</MenuItem>
+                            <MenuItem value={'Facultad_fte'}>Facultad FTE</MenuItem>
+                            <MenuItem value={'Facultad_6'}>Facultad 6</MenuItem>
+                            <MenuItem value={'Deportes'}>Deportes</MenuItem>
+                            <MenuItem value={'CIDI'}>CIDI</MenuItem>
+                            <MenuItem value={'CESOL'}>CESOL</MenuItem>
+                            <MenuItem value={'TLM'}>TLM</MenuItem>
+                            <MenuItem value={'CIGED'}>CIGED</MenuItem>
+                            <MenuItem value={'CEGEL'}>CEGEL</MenuItem>
+                            <MenuItem value={'CEIGE'}>CEIGE</MenuItem>
+                            <MenuItem value={'FORTES'}>FORTES</MenuItem>
+                            <MenuItem value={'CREAD'}>CREAD</MenuItem>
+                            <MenuItem value={'CTI'}>CTI</MenuItem>
+                            <MenuItem value={'CENTRO_DE_SOPORTE'}>CENTRO DE SOPORTE</MenuItem>
+                            <MenuItem value={'Fuera_de_la_universidad'}>Fuera de la universidad </MenuItem>
+                            <MenuItem value={'Transportación'}>Transportación</MenuItem>
+                        </Select>
+                    </FormControl>
                     <TextField
                         id="descripcion"
                         label="Descripción"

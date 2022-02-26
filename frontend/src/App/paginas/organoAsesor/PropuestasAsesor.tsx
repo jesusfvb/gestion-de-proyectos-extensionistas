@@ -56,7 +56,7 @@ export default function PropuestasAsesor(): ReactElement {
             headerName: "Estado",
             headerAlign: "left",
             align: "left",
-            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
+            valueOptions: ["PENDIENTE", "ACEPTADA", "DENEGADA"]
         },
     ]
     const columns2: GridColumns = [
@@ -83,7 +83,7 @@ export default function PropuestasAsesor(): ReactElement {
             headerName: "Estado",
             headerAlign: "left",
             align: "left",
-            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
+            valueOptions: ["PENDIENTE", "ACEPTADA", "DENEGADA"]
         },
         {
             field: "id",

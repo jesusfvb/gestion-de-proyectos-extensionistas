@@ -9,6 +9,8 @@ public class CriteriosNewSo {
 
     private String coordinador;
 
+    private String area;
+
     private String description;
 
     public CriteriosNewSo() {
@@ -21,6 +23,8 @@ public class CriteriosNewSo {
         criterio.setNombre(this.nombre);
         criterio.setCoordinador(this.coordinador);
         criterio.setDescripcion(this.description);
+        criterio.setListo(false);
+        criterio.setArea(this.area);
 
         return criterio;
     }
@@ -35,5 +39,9 @@ public class CriteriosNewSo {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getArea() {
+        return area;
     }
 }

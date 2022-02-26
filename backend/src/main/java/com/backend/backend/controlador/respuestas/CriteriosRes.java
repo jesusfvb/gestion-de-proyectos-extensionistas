@@ -10,13 +10,19 @@ public class CriteriosRes {
 
     private String coordinador;
 
+    private String area;
+
     private String description;
+
+    private Boolean listo;
 
     public CriteriosRes(Criterio criterio) {
         this.id = criterio.getId();
         this.nombre = criterio.getNombre();
         this.coordinador = criterio.getCoordinador();
         this.description = criterio.getDescripcion();
+        this.area = criterio.getArea();
+        this.listo = criterio.getListo();
     }
 
     public Integer getId() {
@@ -33,5 +39,13 @@ public class CriteriosRes {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public Boolean getListo() {
+        return listo;
     }
 }

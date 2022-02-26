@@ -32,7 +32,6 @@ export default function Proyectos(): ReactElement {
             headerAlign: "left",
             align: "left"
         },
-
         {
             field: "estado",
             flex: 1,
@@ -40,7 +39,7 @@ export default function Proyectos(): ReactElement {
             headerName: "Estado",
             headerAlign: "left",
             align: "left",
-            valueOptions: ["ALMACENADO", "INSCRITO", "FINALIZADO"]
+            valueOptions: ["ACTIVO", "CULMINADO"]
         },
         {
             field: "id",

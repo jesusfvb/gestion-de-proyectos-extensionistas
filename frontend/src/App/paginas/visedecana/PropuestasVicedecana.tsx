@@ -70,7 +70,7 @@ export default function PropuestasVicedecana(): ReactElement {
             headerAlign: "left",
             align: "left",
             hide: option === 2,
-            valueOptions: ["PENDIENTE", "APROBADO", "DENEGADO"]
+            valueOptions: ["PENDIENTE", "ACEPTADA", "DENEGADA"]
         },
         {
             field: "id",
@@ -308,7 +308,7 @@ export default function PropuestasVicedecana(): ReactElement {
 
     useEffect(() => {
         axios
-            .get(option === 2 ? "/criterios" : "/propuestas")
+            .get(option === 2 ? "/criterios/listos" : "/propuestas")
             .then(response => {
                 setRows(response.data)
                 setSelected(response.data[0])

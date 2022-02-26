@@ -32,7 +32,6 @@ export default function Proyectos(): ReactElement {
             headerAlign: "left",
             align: "left"
         },
-
         {
             field: "estado",
             flex: 1,

@@ -5,12 +5,13 @@ import com.backend.backend.controlador.solicitud.InscriAlmaceSol;
 import com.backend.backend.controlador.solicitud.ProyectoNewSol;
 import com.backend.backend.repositorio.ProyectoR;
 import com.backend.backend.repositorio.entidades.Proyecto;
-import com.backend.backend.repositorio.entidades.Usuario;
 import com.backend.backend.servicios.ProyectoS;
 import com.backend.backend.servicios.UsuarioS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,10 @@ public class ProyectoSI implements ProyectoS {
 
     @Override
     public Integer borrar(Integer id) {
+        Proyecto proyecto = proyectoR.getById(id);
+        proyecto.getAlamacenados().clear();
+        proyecto.getParticipantes().clear();
+        proyectoR.save(proyecto);
         proyectoR.deleteById(id);
         return id;
     }

@@ -23,6 +23,9 @@ public class Proyecto extends Entidad {
     @Column
     private String coordinador;
 
+    @Column
+    private String img;
+
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "proyecto_id")
     private List<Usuario> alamacenados = new ArrayList<>();
@@ -82,5 +85,13 @@ public class Proyecto extends Entidad {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

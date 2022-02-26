@@ -73,12 +73,10 @@ export default function Inicio(): ReactElement {
     };
 
     const handleChangeNombre = (event: ChangeEvent<HTMLInputElement>) => {
-        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
-        if (event.target.value.length === 0) {
-            setValido({...valido, nombre: true})
-        } else {
-            setValido({...valido, nombre: reg.test(event.target.value)})
-        }
+        setValido({
+            ...valido,
+            nombre: event.target.value.match("^[A-Za-zƒŠŒŽšœžŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèé êëìíîïðñòóôõöøùúûüýþÿ]*$") === null
+        })
         setNombre(event.target.value)
     }
     const handleChangeDescripcion = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -90,12 +88,10 @@ export default function Inicio(): ReactElement {
         setDescripcion(event.target.value)
     }
     const handleChangeCooarrdinador = (event: ChangeEvent<HTMLInputElement>) => {
-        let reg = new RegExp("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
-        if (event.target.value.length === 0) {
-            setValido({...valido, coordinador: true})
-        } else {
-            setValido({...valido, coordinador: reg.test(event.target.value)})
-        }
+        setValido({
+            ...valido,
+            coordinador: event.target.value.match("^[A-Za-zƒŠŒŽšœžŸÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ ]*$") === null
+        })
         setCoordinador(event.target.value)
     }
     const handleChangeImg = (event: SelectChangeEvent) => {

@@ -1,5 +1,5 @@
 import {createContext, ReactElement, useEffect, useState} from "react";
-import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Login from "./paginas/Login";
 import axios from "axios";
 import BarraDeNavegacion from "./componentes/BarraDeNavegacion";
@@ -156,9 +156,15 @@ export default function App(): ReactElement {
                                            element={(isRolBooleanF("Vicedecana")) ? <PropuestasVicedecana/> :
                                                isRolBooleanF("Asesor") ? <PropuestasAsesor/> :
                                                    <Propuestas/>}/>
-                                    <Route path="/proyectos" element={<Proyectos/>}/>
-                                    <Route path="/criterios" element={<Criterios/>}/>
-                                    <Route path="/listado" element={<Listado/>}/>
+                                    {
+                                        isRolRenderF("Usuario", <Route path="/proyectos" element={<Proyectos/>}/>)
+                                    }
+                                    {
+                                        isRolRenderF("Asesor", <Route path="/criterios" element={<Criterios/>}/>)
+                                    }
+                                    {
+                                        isRolRenderF("Vicedecana", <Route path="/listado" element={<Listado/>}/>)
+                                    }
                                 </Route>
                                 <Route path="*" element={<E404/>}/>
                             </>

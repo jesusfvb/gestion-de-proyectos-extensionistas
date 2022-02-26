@@ -23,9 +23,19 @@ public class CriterioC {
         return ResponseEntity.ok(criterioS.listar());
     }
 
+    @GetMapping("/listos")
+    private ResponseEntity<List<CriteriosRes>> listarListos() {
+        return ResponseEntity.ok(criterioS.listarListos());
+    }
+
     @PostMapping
     private ResponseEntity<CriteriosRes> save(@RequestBody CriteriosNewSo criterio) {
         return ResponseEntity.ok(criterioS.save(criterio));
+    }
+
+    @PostMapping("/listo/{id}")
+    private ResponseEntity<CriteriosRes> listo(@PathVariable Integer id) {
+        return ResponseEntity.ok(criterioS.listo(id));
     }
 
     @PutMapping

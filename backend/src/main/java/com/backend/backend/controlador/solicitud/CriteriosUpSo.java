@@ -11,19 +11,21 @@ public class CriteriosUpSo {
 
     private String coordinador;
 
+    private String area;
+
     private String description;
 
     public CriteriosUpSo() {
     }
 
     @JsonIgnore
-    public Criterio getCriterios() {
+    public Criterio getCriterios(Criterio criterio) {
 
-        Criterio criterio = new Criterio();
         criterio.setId(this.id);
         criterio.setNombre(this.nombre);
         criterio.setCoordinador(this.coordinador);
         criterio.setDescripcion(this.description);
+        criterio.setArea(this.area);
 
         return criterio;
     }
@@ -38,5 +40,13 @@ public class CriteriosUpSo {
 
     public String getDescription() {
         return description;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getArea() {
+        return area;
     }
 }

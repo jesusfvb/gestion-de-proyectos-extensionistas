@@ -12,9 +12,13 @@ public interface CriterioS {
 
     List<CriteriosRes> listar();
 
+    List<CriteriosRes> listarListos();
+
     CriteriosRes save(CriteriosNewSo criterio);
 
     CriteriosRes update(CriteriosUpSo criterio);
+
+    CriteriosRes listo(Integer id);
 
     Integer[] delete(Integer[] ids);
 }
